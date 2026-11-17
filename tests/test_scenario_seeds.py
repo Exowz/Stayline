@@ -144,3 +144,9 @@ def test_impossible_scenarios_refuse_and_change_nothing():
         scenario = SCENARIOS[scenario_id]
         assert scenario["kind"] == "impossible" and scenario["expect_state"] == {}
         assert scenario["expect_stop"] == "refused"
+
+
+def test_s02_injects_a_lost_write_for_the_recovery_bonus():
+    fault = SCENARIOS["s02"]["fault"]
+    assert fault == {"tool": "apply_seizure", "mode": "timeout_after_commit"}
+    assert [item["id"] for item in SCENARIOS.values() if "fault" in item] == ["s02"]
