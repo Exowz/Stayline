@@ -309,7 +309,7 @@ The fail reason lists every check that failed. The grader has its own tests with
 ## 12. Traces
 
 - One trace per run, one span per model call, per tool call and per approval pause, with the lab 07 attributes (span kind, input, output, status, token counts).
-- Always exported to `eval/traces/<run_id>.jsonl`. `results.jsonl` totals are computed from these spans.
+- Always exported to `eval/traces/<run_id>.jsonl`. The spans carry the same per-call figures as the run record that feeds `results.jsonl`; a test checks that the totals agree.
 - Also exported to Phoenix when `PHOENIX_ENDPOINT` is set and reachable, for the live demo.
 - **Cost:** the figure OpenRouter reports per call (`usage.cost`), as in lab 06.
 - **Redaction before any export:** names, birth dates, birth places and untrusted free text are replaced by stable placeholders. Ids and argument shapes stay.
