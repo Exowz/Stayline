@@ -131,7 +131,12 @@ def _seed_rows(seed_path: Path) -> dict[str, list[dict[str, Any]]]:
 
 def _insert_rows(connection: sqlite3.Connection, table: str, rows: list[dict[str, Any]]) -> None:
     """Insert seed rows, encoding structured fields as JSON text."""
+    expected_fields = {
+        column["name"] for column in connection.execute(f"PRAGMA table_info({table})")
+    }
     for row in rows:
+        if set(row) != expected_fields:
+            raise ValueError(f"{table} seed row must be a full row")
         fields = tuple(row)
         values = [
             json.dumps(row[field], ensure_ascii=False) if field in JSON_COLUMNS.get(table, set())
