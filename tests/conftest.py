@@ -29,3 +29,14 @@ async def insurer(seeded_db: str):
     """Connect to the insurer contracts server when requested."""
     async with open_server("stayline.servers.insurer_contracts", seeded_db) as server:
         yield server
+
+
+@pytest.fixture
+async def harness(seeded_db: str):
+    """Open the harness against the available insurer and echo servers."""
+    from stayline.agent.harness import Harness
+    from stayline.config import load_settings
+
+    modules = ("stayline.servers.insurer_contracts", "tests.echo_server")
+    async with Harness(load_settings(db_path=seeded_db), modules=modules) as client:
+        yield client
