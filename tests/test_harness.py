@@ -23,7 +23,7 @@ async def test_specs_cover_both_servers(harness):
     assert {
         "find_contracts", "get_contract", "get_operation_request",
         "find_operation_requests", "get_restriction_ledger", "set_request_status",
-        "echo_dict", "echo_list", "fail", "patterned",
+        "get_notice", "find_notices", "resolve_issuing_authority", "get_rule",
     } <= names
 
 

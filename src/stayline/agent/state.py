@@ -1,7 +1,7 @@
 """State shared by the agent graph and router."""
 
 import operator
-from typing import Annotated, TypedDict
+from typing import Annotated, NotRequired, TypedDict
 
 
 DANGEROUS = frozenset({"apply_seizure", "execute_operation"})
@@ -29,6 +29,7 @@ class AgentState(TypedDict):
     messages: Annotated[list[dict], operator.add]
     action: dict | None
     preview: dict | None
+    last_write: NotRequired[dict]
     tool_calls: Annotated[list[dict], operator.add]
     usage: Annotated[list[dict], operator.add]
     approvals: Annotated[list[dict], operator.add]
