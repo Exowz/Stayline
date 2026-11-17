@@ -17,21 +17,16 @@ Go deeper when needed:
 
 ## Status (2026-11-17)
 
-- Concept approved by both team members.
-- Name chosen: Stayline.
-- **Design approved by Ewan:** `docs/superpowers/specs/2026-11-17-stayline-design.md`. It settles every open decision of the concept; where the two differ, the design wins.
-- No GitHub repo yet (decided: private now, public after the defence).
-- **Nothing built yet.** Next step: the implementation plan.
+- Concept and design approved. Design: `docs/superpowers/specs/2026-11-17-stayline-design.md` (where it differs from the concept, the design wins).
+- Plan: `docs/superpowers/plans/2026-11-17-stayline.md` (21 tasks, two even lanes: Khadidja and Ewan).
+- GitHub: `Exowz/Stayline`, private until the defence; Khadidja (`KHAD5ADDI`) is a collaborator.
+- Done on `main`: plan tasks 1 to 3 (scaffold, typed results, settings, SQLite backend and seeds, business rules) and the shared server test fixtures (`tests/helpers.py`, `tests/conftest.py`).
+- Next: the two lanes of the plan, in parallel.
 - Code freeze **Thursday 19 Nov 2026, 23:59** (tag `v1.0`); defence Friday 20 Nov.
 
 ## What to do next
 
-1. **`superpowers:brainstorming`.** The concept is settled: do not reopen the domain or the core mechanics.
-   - Use the skill to settle the open decisions in `docs/concept.md` section 12, and the open questions in `.handoff/HANDOFF.md` section 5, with Ewan, one question at a time, each with a recommendation.
-   - Then present the design and write it to `docs/superpowers/specs/<date>-stayline-design.md`.
-   - Hard gate: no code before Ewan approves the design.
-2. **`superpowers:writing-plans`:** an implementation plan ordered to protect the evaluation: backend and seed, then the MCP servers, the graph, `run_eval.py`, the scenarios, memory, traces, and only then the bonuses.
-3. **Execution:** Codex writes the code from specs (see Working rules); Claude reviews, verifies and commits.
+Follow the plan task by task. For each task: Claude writes `.techlead/stepN_spec.md` from the plan task, a coding agent implements it (Codex or Opus), Claude reviews, re-runs the tests and commits. The design is settled: do not reopen it without Ewan.
 
 ## Non-negotiable requirements (from the brief)
 
@@ -73,6 +68,7 @@ Go deeper when needed:
 - Plain commit messages, **no `Co-Authored-By:` or any AI attribution**, in commits or PR descriptions.
 - Never force-push.
 - Commit after each reviewed phase.
+- Branches: one short branch per task, named by owner (`ewan/<task>`, `khadidja/<task>`), merged into `main` through a small pull request once its tests pass. No long-lived personal branches.
 - Ask before creating the GitHub repo and before the first push.
 
 **Repo content:**
