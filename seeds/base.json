@@ -1,0 +1,63 @@
+{
+  "notices": [
+    {
+      "notice_id": "N-2026-0417",
+      "court_id": "TJ-PARIS",
+      "judge_role": "juge_instruction",
+      "procedure_type": "information_judiciaire",
+      "case_reference": "2026/00417",
+      "target_policy_number": "av-2019 004.512",
+      "target_last_name": "Benaissa",
+      "target_first_names": "Karim",
+      "target_birth_date": "1978-03-14",
+      "target_birth_place_code": "75112",
+      "free_text": "La saisie concerne le contrat indiqué dans le présent avis."
+    }
+  ],
+  "judicial_reference": [
+    {"court_id": "TJ-PARIS", "judge_role": "jld", "procedure_type": "enquete_preliminaire", "valid": 1, "note": ""},
+    {"court_id": "TJ-PARIS", "judge_role": "jld", "procedure_type": "enquete_flagrance", "valid": 1, "note": ""},
+    {"court_id": "TJ-PARIS", "judge_role": "juge_instruction", "procedure_type": "information_judiciaire", "valid": 1, "note": ""},
+    {"court_id": "TJ-PARIS", "judge_role": "jld", "procedure_type": "information_judiciaire", "valid": 0, "note": ""},
+    {"court_id": "TJ-LYON", "judge_role": "jld", "procedure_type": "enquete_preliminaire", "valid": 1, "note": ""},
+    {"court_id": "TJ-LYON", "judge_role": "jld", "procedure_type": "enquete_flagrance", "valid": 1, "note": ""},
+    {"court_id": "TJ-LYON", "judge_role": "juge_instruction", "procedure_type": "information_judiciaire", "valid": 1, "note": ""},
+    {"court_id": "TJ-LYON", "judge_role": "jld", "procedure_type": "information_judiciaire", "valid": 0, "note": ""},
+    {"court_id": "TJ-BORDEAUX", "judge_role": "jld", "procedure_type": "enquete_preliminaire", "valid": 1, "note": ""},
+    {"court_id": "TJ-BORDEAUX", "judge_role": "jld", "procedure_type": "enquete_flagrance", "valid": 1, "note": ""},
+    {"court_id": "TJ-BORDEAUX", "judge_role": "juge_instruction", "procedure_type": "information_judiciaire", "valid": 1, "note": ""},
+    {"court_id": "TJ-BORDEAUX", "judge_role": "jld", "procedure_type": "information_judiciaire", "valid": 0, "note": ""}
+  ],
+  "rules": [
+    {
+      "rule_id": "CPP-706-155",
+      "version": "2026",
+      "valid_from": "2026-01-01",
+      "restrictions": ["rachat", "renonciation", "nantissement", "acceptation_benefice", "avance"]
+    }
+  ],
+  "subscribers": [
+    {"subscriber_id": "S-0001", "last_name": "Benaïssa", "first_names": "Karim", "birth_date": "1978-03-14", "birth_place_code": "75112", "deceased": 0},
+    {"subscriber_id": "S-0002", "last_name": "Martin", "first_names": "Claire", "birth_date": "1985-11-02", "birth_place_code": "69123", "deceased": 0},
+    {"subscriber_id": "S-0003", "last_name": "Martin", "first_names": "Claire", "birth_date": "1990-06-21", "birth_place_code": "33063", "deceased": 0},
+    {"subscriber_id": "S-0004", "last_name": "Lefèvre", "first_names": "Paul", "birth_date": "1968-02-09", "birth_place_code": "59350", "deceased": 1},
+    {"subscriber_id": "S-0005", "last_name": "Dubois", "first_names": "Anne", "birth_date": "1975-08-16", "birth_place_code": "44109", "deceased": 0},
+    {"subscriber_id": "S-0006", "last_name": "Nguyen", "first_names": "Linh", "birth_date": "1982-12-05", "birth_place_code": "31555", "deceased": 0}
+  ],
+  "contracts": [
+    {"contract_id": "C-0001", "policy_number": "AV-2019-004512", "insurer": "STAYLINE-VIE", "subscriber_id": "S-0001", "status": "active", "value_eur": 84000, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 3, "comment": ""},
+    {"contract_id": "C-0002", "policy_number": "AV-2021-000873", "insurer": "STAYLINE-VIE", "subscriber_id": "S-0001", "status": "active", "value_eur": 23000, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 1, "comment": ""},
+    {"contract_id": "C-0003", "policy_number": "AV-2018-001200", "insurer": "STAYLINE-VIE", "subscriber_id": "S-0002", "status": "active", "value_eur": 41000, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 1, "comment": ""},
+    {"contract_id": "C-0004", "policy_number": "AV-2020-007781", "insurer": "STAYLINE-VIE", "subscriber_id": "S-0003", "status": "active", "value_eur": 15500, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 1, "comment": ""},
+    {"contract_id": "C-0005", "policy_number": "AV-2015-000310", "insurer": "STAYLINE-VIE", "subscriber_id": "S-0004", "status": "active", "value_eur": 62000, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 1, "comment": ""},
+    {"contract_id": "C-0006", "policy_number": "AV-2012-000045", "insurer": "STAYLINE-VIE", "subscriber_id": "S-0005", "status": "surrendered", "value_eur": 0, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 1, "comment": ""},
+    {"contract_id": "C-0007", "policy_number": "XV-2017-009000", "insurer": "OTHER-VIE", "subscriber_id": "S-0006", "status": "active", "value_eur": 30000, "advance_eur": 0, "allocation": {"fonds_euro": 60, "uc_actions": 40}, "version": 1, "comment": ""}
+  ],
+  "operation_requests": [
+    {"request_id": "R-0001", "type": "rachat", "contract_id": "C-0001", "origin": "cgp", "amount_eur": 8000, "target_allocation": null, "status": "pending", "created_at": "2026-11-10", "note": "", "attachments": []},
+    {"request_id": "R-0002", "type": "arbitrage", "contract_id": "C-0001", "origin": "cgp", "amount_eur": null, "target_allocation": {"fonds_euro": 80, "uc_actions": 20}, "status": "pending", "created_at": "2026-11-11", "note": "", "attachments": []},
+    {"request_id": "R-0003", "type": "rachat", "contract_id": "C-0002", "origin": "cgp", "amount_eur": 5000, "target_allocation": null, "status": "pending", "created_at": "2026-11-12", "note": "", "attachments": []},
+    {"request_id": "R-0004", "type": "avance", "contract_id": "C-0001", "origin": "cgp", "amount_eur": 3000, "target_allocation": null, "status": "pending", "created_at": "2026-11-13", "note": "", "attachments": []},
+    {"request_id": "R-0005", "type": "avance", "contract_id": "C-0003", "origin": "cgp", "amount_eur": 2000, "target_allocation": null, "status": "pending", "created_at": "2026-11-14", "note": "", "attachments": []}
+  ]
+}
