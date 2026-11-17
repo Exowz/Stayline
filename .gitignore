@@ -1,0 +1,15 @@
+# Private context and working notes (never committed)
+.handoff/
+.techlead/
+
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# System
+.DS_Store
