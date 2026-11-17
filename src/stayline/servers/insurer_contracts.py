@@ -12,6 +12,7 @@ from mcp.types import ToolAnnotations
 from pydantic import BaseModel, Field
 
 from stayline.backend.db import connect
+from stayline.backend.faults import with_fault
 from stayline.backend.rules import authority_is_valid, is_operation_permitted, match_contracts
 from stayline.config import Settings
 from stayline.servers.results import tool_error
@@ -87,6 +88,7 @@ def find_contracts(
 
 
 @mcp.tool(annotations=READ)
+@with_fault("get_contract")
 def get_contract(contract_id: ContractId) -> dict:
     """Read a contract and subscriber; use after identifying a contract.
     Returns status, version and untrusted comment; example: contract_id="C-1234"."""
@@ -248,6 +250,7 @@ def _save_result(db: sqlite3.Connection, key: str | None, tool: str, result: dic
 
 
 @mcp.tool(annotations=DANGEROUS_WRITE)
+@with_fault("apply_seizure")
 def apply_seizure(
     notice_id: NoticeId,
     contract_id: ContractId,
@@ -351,6 +354,7 @@ def apply_seizure(
 
 
 @mcp.tool(annotations=DANGEROUS_WRITE)
+@with_fault("execute_operation")
 def execute_operation(
     request_id: RequestId,
     contract_id: ContractId,
