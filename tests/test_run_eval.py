@@ -63,6 +63,34 @@ async def test_result_line_has_every_brief_field(tmp_path):
     assert result["trace_file"] is None and result["error"] is None
 
 
+async def test_traced_result_has_file_and_matching_usage(tmp_path):
+    result = await run_scenario(
+        request_scenario(), 0, Settings(model="scripted-request"), tmp_path,
+        llm=status_script(), modules=TEST_MODULES, traces_dir=tmp_path / "traces",
+    )
+    assert result["passed"] is True
+    trace_file = Path(result["trace_file"])
+    assert trace_file.exists()
+    spans = [json.loads(line) for line in trace_file.read_text().splitlines()]
+    llms = [span for span in spans if span["kind"] == "LLM"]
+    assert sum(span["attributes"]["llm.token_count.prompt"] for span in llms) == result["tokens_in"]
+    assert sum(span["attributes"]["llm.token_count.completion"] for span in llms) == result["tokens_out"]
+    assert sum(span["attributes"]["llm.cost_usd"] for span in llms) == result["cost_usd"]
+
+
+async def test_trace_setup_failure_still_grades_scenario(tmp_path, monkeypatch):
+    def fail_trace(*args):
+        raise RuntimeError("trace setup failed")
+
+    monkeypatch.setattr("eval.run_eval.start_tracing", fail_trace)
+    result = await run_scenario(
+        request_scenario(), 0, Settings(), tmp_path,
+        llm=status_script(), modules=TEST_MODULES, traces_dir=tmp_path / "traces",
+    )
+    assert result["passed"] is True
+    assert result["trace_file"] is None
+
+
 async def test_pass_is_read_from_backend(tmp_path):
     result = await run_scenario(
         request_scenario(), 0, Settings(), tmp_path,

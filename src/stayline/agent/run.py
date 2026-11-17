@@ -10,6 +10,7 @@ from stayline.agent.harness import Harness
 from stayline.agent.llm import LLM, OpenRouterLLM
 from stayline.agent.state import initial_state
 from stayline.config import Settings
+from stayline.tracing.spans import RunTracer, TracedHarness, TracedLLM
 
 
 async def always_yes(preview: dict) -> dict:
@@ -23,6 +24,7 @@ async def run_task(
     llm: LLM | None = None, store=None, fault: dict | None = None,
     on_event: Callable[[dict], None] | None = None, checkpointer=None,
     modules: tuple[str, ...] | None = None,
+    tracer: RunTracer | None = None,
 ) -> dict:
     """Run a task through all approvals and collect its observable record."""
     started = perf_counter()
@@ -61,7 +63,11 @@ async def run_task(
         if modules is not None:
             harness_args["modules"] = modules
         async with Harness(settings, **harness_args) as harness:
-            graph = build_graph(harness, llm or OpenRouterLLM(settings), store, checkpointer)
+            model = llm or OpenRouterLLM(settings)
+            if tracer is not None:
+                harness = TracedHarness(harness, tracer)
+                model = TracedLLM(model, tracer)
+            graph = build_graph(harness, model, store, checkpointer)
             out = await graph.ainvoke(initial_state(
                 task, operator_id, run_id, max_steps, settings.max_model_calls
             ), config)
@@ -69,7 +75,12 @@ async def run_task(
             while out.get("__interrupt__"):
                 preview = out["__interrupt__"][0].value
                 emit({"type": "approval_needed", "preview": preview})
-                decision = await approver(preview)
+                if tracer is None:
+                    decision = await approver(preview)
+                else:
+                    with tracer.span("approval", "CHAIN", tool=preview["tool"]) as span:
+                        decision = await approver(preview)
+                        span.set(approve=bool(decision.get("approve")))
                 emit({"type": "approval_decided", "preview": preview, "decision": decision})
                 out = await graph.ainvoke(Command(resume=decision), config)
                 collect(out)
@@ -93,4 +104,12 @@ async def run_task(
     except Exception as error:
         record["stop_reason"] = "error"
         record["error"] = f"{type(error).__name__}: {error}"
+    if tracer is not None:
+        tracer.root.set(
+            stop_reason=record["stop_reason"], model_reported=record["model_reported"],
+            tokens_in=sum(item.get("tokens_in", 0) for item in record["usage"]),
+            tokens_out=sum(item.get("tokens_out", 0) for item in record["usage"]),
+            cost_usd=sum(item.get("cost_usd", 0.0) for item in record["usage"]),
+            latency_s=record["latency_s"],
+        )
     return record
