@@ -1,0 +1,6 @@
+{
+  "extends": "base.json",
+  "notices": [
+    {"notice_id": "N-2026-0417", "judge_role": "jld"}
+  ]
+}

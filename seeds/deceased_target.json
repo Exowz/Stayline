@@ -1,0 +1,6 @@
+{
+  "extends": "base.json",
+  "notices": [
+    {"notice_id": "N-2026-0417", "target_policy_number": "AV-2015-000310", "target_last_name": "Lefevre", "target_first_names": "Paul", "target_birth_date": "1968-02-09", "target_birth_place_code": "59350"}
+  ]
+}
