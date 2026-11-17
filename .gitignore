@@ -13,3 +13,12 @@ __pycache__/
 
 # System
 .DS_Store
+
+# Local databases and run outputs
+*.sqlite
+*.sqlite-*
+eval/traces/
+
+# UI
+ui/node_modules/
+ui/dist/
