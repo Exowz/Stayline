@@ -82,6 +82,9 @@ async def run_scenario(
             run_id = f"{scenario['id']}#{repeat}-{uuid4().hex[:8]}"
             run_settings = settings.model_copy(update={
                 "db_path": str(db_path), "memory_db_path": str(memory_path),
+                # The model-call cap follows the scenario's step budget: one call per
+                # tool step, plus room for the final action and one reminder.
+                "max_model_calls": max(settings.max_model_calls, scenario["max_steps"] + 4),
             })
             record = await run_task(
                 scenario["task"], operator_id=scenario.get("operator", "op-default"),
