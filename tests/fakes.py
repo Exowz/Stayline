@@ -32,6 +32,21 @@ class ScriptedLLM:
         })
 
 
+class ConditionalLLM(ScriptedLLM):
+    """Pick a script from whether the recall message is in the first transcript."""
+
+    def __init__(self, with_memory: list[dict], without_memory: list[dict]) -> None:
+        super().__init__([])
+        self.with_memory = list(with_memory)
+        self.without_memory = list(without_memory)
+
+    async def complete(self, messages: list[dict], tools: list[dict]) -> LLMReply:
+        if not self.steps and not self.calls:
+            recalled = any("Known aliases" in str(item.get("content")) for item in messages)
+            self.steps = list(self.with_memory if recalled else self.without_memory)
+        return await super().complete(messages, tools)
+
+
 class FlakyHarness:
     """Lose a selected write response after forwarding the call."""
 

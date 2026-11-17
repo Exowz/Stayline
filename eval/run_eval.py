@@ -17,6 +17,7 @@ from stayline.agent.llm import LLM
 from stayline.agent.run import always_yes, run_task
 from stayline.backend.db import reset_from_seed, snapshot
 from stayline.config import Settings, load_settings
+from stayline.memory.aliases import load_aliases, open_store
 from stayline.tracing.redact import Redactor
 from stayline.tracing.spans import start_tracing
 
@@ -30,6 +31,7 @@ FIELD_TYPES = {
     "id": str, "task": str, "seed": str, "expect_state": dict,
     "forbid_calls": list, "max_steps": int,
 }
+OPTIONAL_FIELD_TYPES = {"operator": str, "memory": dict, "prior_tasks": list}
 
 
 def load_scenarios(path: str | Path) -> list[dict]:
@@ -53,10 +55,38 @@ def load_scenarios(path: str | Path) -> list[dict]:
             for field, expected_type in FIELD_TYPES.items():
                 if type(scenario[field]) is not expected_type:
                     raise ValueError(f"line {line_number}: invalid {field}")
+            for field, expected_type in OPTIONAL_FIELD_TYPES.items():
+                if field in scenario and type(scenario[field]) is not expected_type:
+                    raise ValueError(f"line {line_number}: invalid {field}")
             if not isinstance(scenario["kind"], str) or scenario["kind"] not in KINDS:
                 raise ValueError(f"line {line_number}: invalid kind: {scenario['kind']}")
             scenarios.append(scenario)
     return scenarios
+
+
+async def _run_with_memory(
+    scenario: dict, run_id: str, settings: Settings, memory_path: Path,
+    llm: LLM | None, modules: tuple[str, ...] | None, tracer,
+) -> tuple[dict, list[list[str]]]:
+    """Preload the memory, run any prior tasks in their own threads, then the graded task."""
+    operator = scenario.get("operator", "op-default")
+    prior_tools: list[list[str]] = []
+    with open_store(str(memory_path)) as store:
+        load_aliases(store, scenario.get("memory", {}))
+        for index, prior in enumerate(scenario.get("prior_tasks", [])):
+            earlier = await run_task(
+                prior["task"], operator_id=prior.get("operator", operator),
+                run_id=f"{run_id}-prior{index}", settings=settings,
+                max_steps=scenario["max_steps"], approver=always_yes, llm=llm,
+                store=store, modules=modules,
+            )
+            prior_tools.append([call["tool"] for call in earlier["tool_calls"]])
+        record = await run_task(
+            scenario["task"], operator_id=operator, run_id=run_id, settings=settings,
+            max_steps=scenario["max_steps"], approver=always_yes, llm=llm,
+            fault=scenario.get("fault"), store=store, modules=modules, tracer=tracer,
+        )
+    return record, prior_tools
 
 
 async def run_scenario(
@@ -97,12 +127,11 @@ async def run_scenario(
                 except Exception:
                     tracer = None
             try:
-                record = await run_task(
-                    scenario["task"], operator_id=scenario.get("operator", "op-default"),
-                    run_id=run_id, settings=run_settings, max_steps=scenario["max_steps"],
-                    approver=always_yes, llm=llm, fault=scenario.get("fault"),
-                    modules=modules, tracer=tracer,
+                record, prior_tools = await _run_with_memory(
+                    scenario, run_id, run_settings, memory_path, llm, modules, tracer,
                 )
+                if "prior_tasks" in scenario:
+                    result["prior_tools"] = prior_tools
             finally:
                 if tracer is not None:
                     try:
