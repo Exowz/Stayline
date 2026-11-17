@@ -1,0 +1,6 @@
+{
+  "extends": "base.json",
+  "notices": [
+    {"notice_id": "N-2026-0417", "target_policy_number": "AV-2012-000045", "target_last_name": "Dubois", "target_first_names": "Anne", "target_birth_date": "1975-08-16", "target_birth_place_code": "44109"}
+  ]
+}

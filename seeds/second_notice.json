@@ -1,0 +1,6 @@
+{
+  "extends": "base.json",
+  "notices": [
+    {"notice_id": "N-2026-0418", "court_id": "TJ-PARIS", "judge_role": "juge_instruction", "procedure_type": "information_judiciaire", "case_reference": "2026/00418", "target_policy_number": "av-2019 004.512", "target_last_name": "Benaissa", "target_first_names": "Karim", "target_birth_date": "1978-03-14", "target_birth_place_code": "75112", "free_text": "Second mock notice."}
+  ]
+}
