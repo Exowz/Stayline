@@ -1,0 +1,1 @@
+{"dependencies": ["."], "graphs": {"agent": "./src/stayline/agent/studio.py:agent"}}
