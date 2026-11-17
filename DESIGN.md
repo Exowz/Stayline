@@ -17,7 +17,8 @@ Clean, modern and calm: floating glass islands on a soft canvas, with room to br
 Rules:
 
 - The loud colour means one thing: this needs you. It is never decoration.
-- No separate red, green or amber. Done and allowed states use the second colour (a tick, an outline). A failed run uses the loud colour with a word, never colour alone.
+- No separate green or amber. Done and allowed states use the second colour (a tick, an outline).
+- **One deliberate exception, the failure colour:** signal red, `oklch(0.6 0.22 25)`, white text on it. It is used only for something that went wrong: a failed scenario on the Evaluation and Models screens, a failed tool call in the plan list, an error or budget stop reason, a failed run's dot in the sidebar. It always comes with a word or an icon, never colour alone. It is not part of the 60/30/10 split and must stay rare: a screen with no failure shows no red. Blue still means "this needs you"; red means "this failed". A blocked operation is not a failure and stays blue.
 - Tints are mixed from the three colours (for example the loud colour at 16% on white for chips), never new hues.
 - Text on light panels is the second colour at full strength for body, and mixed toward white for secondary text, keeping at least 4.5:1 contrast.
 
