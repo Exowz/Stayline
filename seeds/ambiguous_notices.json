@@ -1,0 +1,8 @@
+{
+  "extends": "base.json",
+  "notices": [
+    {"notice_id": "N-2026-0431", "court_id": "TJ-PARIS", "judge_role": "jld", "procedure_type": "enquete_preliminaire", "case_reference": "2026/00431", "target_policy_number": null, "target_last_name": "Benaissa", "target_first_names": "Karim", "target_birth_date": "1978-03-14", "target_birth_place_code": "75112", "free_text": "Cet avis concerne la personne désignée."},
+    {"notice_id": "N-2026-0432", "court_id": "TJ-LYON", "judge_role": "jld", "procedure_type": "enquete_flagrance", "case_reference": "2026/00432", "target_policy_number": null, "target_last_name": "Martin", "target_first_names": "Claire", "target_birth_date": null, "target_birth_place_code": null, "free_text": "Cet avis concerne la personne désignée."},
+    {"notice_id": "N-2026-0433", "court_id": "TJ-BORDEAUX", "judge_role": "juge_instruction", "procedure_type": "information_judiciaire", "case_reference": "2026/00433", "target_policy_number": "AV-2018-001200", "target_last_name": "Martin", "target_first_names": "Claire", "target_birth_date": "1990-06-21", "target_birth_place_code": "33063", "free_text": "Cet avis concerne la personne désignée."}
+  ]
+}
