@@ -43,11 +43,11 @@ const bonus = [
 .stage1.gone { opacity: 0 !important; pointer-events: none; }
 .bn { position: absolute; left: 100px; right: 100px; display: grid; grid-template-columns: 70px 520px 1fr; gap: 20px; align-items: baseline; }
 .bn .n { color: var(--blue); font-size: 22px; } .bn b { font-size: 46px; font-weight: 400; letter-spacing: -.02em; }
-.bn .d { font-size: 22px; line-height: 1.3; color: var(--muted); }
+.bn .d { font-size: 24px; line-height: 1.3; color: var(--muted); }
 .cmp { position: absolute; inset: 0; }
 .side { position: absolute; top: 490px; display: grid; gap: 4px; } .side .tag.mute { color: var(--muted); }
 .num { font: 400 72px/1 var(--serif); letter-spacing: -.03em; } .num small { font-size: .45em; color: var(--muted); } .num.mu { color: var(--muted); }
-.st { position: absolute; top: 712px; font-size: 20px; color: var(--muted); }
+.st { position: absolute; top: 712px; font-size: 22px; color: var(--muted); }
 .lim { position: absolute; left: 100px; top: 920px; font-size: 23px; color: var(--muted); }
 .fin { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 24px; text-align: center; opacity: 0; transform: scale(.96); transition: opacity 1s .5s, transform 1.4s cubic-bezier(.2, .7, .2, 1) .4s; }
 .fin.on { opacity: 1; transform: none; }

@@ -60,5 +60,5 @@ const secs = useCount(() => trace.total_ms / 1000, () => shown(4), () => print.v
 .proof { position: absolute; left: 1290px; top: 560px; width: 540px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
 .proof .big { display: block; font-size: 78px; letter-spacing: -.03em; }
 .proof .lbl { display: block; margin-top: 4px; font-size: 20px; }
-.trace-cap { position: absolute; left: 104px; top: 912px; font-size: 19px; color: var(--muted); }
+.trace-cap { position: absolute; left: 104px; top: 912px; font-size: 22px; color: var(--muted); }
 </style>

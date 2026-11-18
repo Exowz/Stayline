@@ -95,7 +95,7 @@ html, body, #app { background: var(--deep) !important; }
 html.print .rv, .slidev-print .rv { opacity: 1 !important; transform: none !important; filter: none !important; }
 
 /* ---- shared building blocks ---- */
-.tag { font: 600 19px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--blue); }
+.tag { font: 600 21px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--blue); }
 .panel { position: absolute; padding: 24px 30px; border: 1px solid var(--line); border-left: 3px solid var(--blue); background: rgba(12, 14, 22, .62); }
 .panel.fail { border-left-color: var(--fail); }
 .panel .tag { margin-bottom: 12px; display: block; }

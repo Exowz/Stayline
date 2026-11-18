@@ -24,10 +24,11 @@ onMounted(() => {
   world.setStill(window.matchMedia('(prefers-reduced-motion: reduce)').matches || print())
   world.resize()
   update()
-  world.start()
-  window.addEventListener('resize', () => world?.resize())
+  if (!print() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) world.start()
+  window.addEventListener('resize', onResize)
 })
-onBeforeUnmount(() => world?.stop())
+function onResize() { world?.resize(); update() }
+onBeforeUnmount(() => { world?.stop(); window.removeEventListener('resize', onResize) })
 watch(() => [nav.currentPage.value, nav.clicks.value, phase.value], update)
 </script>
 

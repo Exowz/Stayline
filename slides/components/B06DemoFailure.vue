@@ -40,15 +40,15 @@ const rows = computed(() => trace.spans.map((span, index) => ({
 .wf { position: absolute; left: 100px; right: 100px; top: 284px; }
 .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; font-size: 21px; color: var(--muted); }
 .head .tag { font-size: 18px; color: var(--muted); }
-.r { display: grid; grid-template-columns: 250px 1fr 410px; gap: 20px; align-items: center; height: 31px; font-size: 20px; }
-.nm { color: var(--muted); } .dt { color: var(--muted); text-align: right; white-space: nowrap; font-size: 19px; }
+.r { display: grid; grid-template-columns: 270px 1fr 450px; gap: 20px; align-items: center; height: 33px; font-size: 22px; }
+.nm { color: var(--muted); } .dt { color: var(--muted); text-align: right; white-space: nowrap; font-size: 21px; }
 .tk { position: relative; height: 14px; border-radius: 7px; background: rgba(238, 240, 246, .05); }
 .tk i { position: absolute; top: 0; height: 14px; min-width: 5px; border-radius: 7px; background: var(--ivory); transform: scaleX(0); transform-origin: left; transition: transform .6s cubic-bezier(.3, .6, .2, 1); transition-delay: var(--d); }
 .tk i.llm { background: var(--blue); } .tk i.on { transform: none; }
 .r.bad .nm, .r.bad .dt { color: var(--fail); font-weight: 600; }
 .r.bad .tk i { background: var(--fail); box-shadow: 0 0 22px rgba(255, 92, 98, .9); animation: throb 1.4s ease-in-out infinite; }
 @keyframes throb { 50% { box-shadow: 0 0 40px rgba(255, 92, 98, 1); filter: brightness(1.25); } }
-.grader { left: 100px; right: 100px; top: 790px; padding: 18px 28px; }
+.grader { left: 100px; right: 100px; top: 805px; padding: 18px 28px; }
 .grader .tag { margin-bottom: 6px; font-size: 17px; }
 .grader p { font-size: 26px; font-weight: 500; line-height: 1.25; }
 .sr { font-size: 21px !important; font-weight: 400 !important; color: var(--muted); margin-top: 4px !important; } .sr span { font-family: var(--sans); }

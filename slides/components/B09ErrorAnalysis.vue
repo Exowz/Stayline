@@ -42,9 +42,9 @@ const changes = ['The code checks the contract can take a seizure before any car
 .num { position: absolute; right: 100px; top: 70px; text-align: right; }
 .num .big { font-size: 230px; }
 .num .of { display: block; margin-top: -8px; font-size: 25px; color: var(--muted); }
-.fl { position: absolute; top: 612px; font-size: 20px; color: var(--fail); transition: opacity .8s .6s; }
+.fl { position: absolute; top: 612px; font-size: 23px; color: var(--fail); transition: opacity .8s .6s; }
 .fl.gone { opacity: 0; }
-.every { position: absolute; left: 175px; top: 690px; font-size: 21px; color: var(--muted); }
+.every { position: absolute; left: 175px; top: 690px; font-size: 23px; color: var(--muted); }
 .panel { top: 740px; height: 235px; padding: 20px 26px; }
 .panel .tag { margin-bottom: 8px; font-size: 17px; }
 .panel p { font-size: 23px; line-height: 1.28; color: var(--ivory); margin: 0; }
