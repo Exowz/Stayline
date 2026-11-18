@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
-import { Activity, BookOpen, ChartNoAxesCombined, PanelLeftClose, PanelLeftOpen, Play, Sparkles } from 'lucide-react'
+import { Activity, BookOpen, ChartNoAxesCombined, Play, Sparkles } from 'lucide-react'
 import { openRunEvents, startRun } from '@/lib/api'
 import type { RunEvent } from '@/lib/api'
 import { initialRun, reduceRun } from '@/lib/runState'
@@ -40,7 +40,14 @@ function Dock({ run }: { run: RunView }) {
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('Run')
-  const [collapsed, setCollapsed] = useState(false)
+  const [pointerIn, setPointerIn] = useState(false)
+  const [focusIn, setFocusIn] = useState(false)
+  const [greeting, setGreeting] = useState(true)
+  useEffect(() => {
+    const timer = window.setTimeout(() => setGreeting(false), 2600)
+    return () => window.clearTimeout(timer)
+  }, [])
+  const sideOpen = pointerIn || focusIn || greeting
   const [run, setRun] = useState<RunView>(initialRun)
   const [runId, setRunId] = useState<string | null>(null)
   const [streamError, setStreamError] = useState('')
@@ -75,13 +82,15 @@ export default function App() {
 
   const activeIndex = screens.findIndex((item) => item.name === screen)
 
-  return <div className={collapsed ? 'app-shell collapsed' : 'app-shell'}>
+  return <div className={sideOpen ? 'app-shell side-open' : 'app-shell'}>
+    <div className="side-slot" onMouseEnter={() => setPointerIn(true)} onMouseLeave={() => setPointerIn(false)}
+      onFocus={() => setFocusIn(true)} onBlur={() => setFocusIn(false)}>
     <aside className="glass-side sidebar">
       <div className="brand"><span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
         <span className="side-label"><b>Stayline</b><small>Seizure guard</small></span></div>
       <nav className="nav" aria-label="Screens" style={{ '--idx': activeIndex } as CSSProperties}>
         <span className="nav-pill" aria-hidden="true" />
-        {screens.map(({ name, icon: Icon }) => <button key={name} type="button" title={collapsed ? name : undefined}
+        {screens.map(({ name, icon: Icon }) => <button key={name} type="button"
           className={screen === name ? 'nav-item selected' : 'nav-item'}
           aria-current={screen === name ? 'page' : undefined} onClick={() => setScreen(name)}>
           <Icon size={18} strokeWidth={1.8} /><span className="side-label">{name}</span>
@@ -89,12 +98,8 @@ export default function App() {
         </button>)}
       </nav>
       <div className="sidebar-note"><Activity size={16} /><span className="side-label">Guarded writes need your approval.</span></div>
-      <button type="button" className="side-toggle" onClick={() => setCollapsed((value) => !value)}
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} title={collapsed ? 'Expand sidebar' : undefined}>
-        {collapsed ? <PanelLeftOpen size={18} strokeWidth={1.8} /> : <PanelLeftClose size={18} strokeWidth={1.8} />}
-        <span className="side-label">Collapse</span>
-      </button>
     </aside>
+    </div>
     <main className="pane">
       <header className="page-header">
         <div><h1>{screen}</h1><p>{descriptions[screen]}</p></div>
