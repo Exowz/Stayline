@@ -87,7 +87,7 @@ export default function App() {
     <main className="main-area">
       <header className="island title-island">
         <div><h1>{screen}</h1><p>{descriptions[screen]}</p></div>
-        <span className={`status-pill ${run.status}`}><span className="status-dot" />{statusText}</span>
+        {screen === 'Run' && <span className={`status-pill ${run.status}`}><span className="status-dot" />{statusText}</span>}
       </header>
       {screen === 'Run' && <Run run={run} runId={runId} beginRun={beginRun}
         streamError={streamError} viewLedger={() => setScreen('Ledger')} />}
@@ -95,6 +95,6 @@ export default function App() {
       {screen === 'Evaluation' && <Evaluation />}
       {screen === 'Models' && <Models />}
     </main>
-    <Dock run={{ ...run, elapsed: run.elapsed ?? (startedAt === null ? null : Math.max(0, (clock - startedAt) / 1000)) }} />
+    {screen === 'Run' && <Dock run={{ ...run, elapsed: run.elapsed ?? (startedAt === null ? null : Math.max(0, (clock - startedAt) / 1000)) }} />}
   </div>
 }

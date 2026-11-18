@@ -98,6 +98,70 @@ export type SeedSnapshot = {
   requests: Record<string, string>
 }
 
+export type RateMetrics = {
+  scenarios: number
+  runs: number
+  passed: number
+  pass_rate: number
+  ci_low: number
+  ci_high: number
+  pass_hat_k: number
+  pass_at_k: number
+}
+
+export type KindMetrics = RateMetrics & { kind: string }
+export type Percentiles = { p50: number | null; p95: number | null }
+export type DomainMetrics = {
+  runs: number
+  runs_without_state: number
+  under_blocking: number
+  over_blocking: number
+  wrong_contract_changes: number
+  lineage_completeness: number | null
+  previews_on_expected_contract: number | null
+}
+export type SetExtra = {
+  name: string
+  model: string | null
+  cost_per_success: number | null
+  latency_s: Percentiles
+  total_cost_usd: number
+  domain: DomainMetrics | null
+}
+export type Summary = SetExtra & {
+  runs: number
+  scenarios: number
+  overall: RateMetrics
+  by_kind: KindMetrics[]
+  cost_usd: Percentiles
+  scenario_rows: Array<{
+    id: string
+    kind: string
+    passed: number
+    runs: number
+    stop_reasons: Array<string | null>
+  }>
+  failed: Array<{
+    id: string
+    repeat: number
+    kind: string
+    stop_reason: string | null
+    reason: string | null
+  }>
+}
+export type Comparison = {
+  shared: number
+  only_a: number
+  only_b: number
+  both: number
+  neither: number
+  sign_test_p: number
+  a: { overall: RateMetrics; by_kind: KindMetrics[] }
+  b: { overall: RateMetrics; by_kind: KindMetrics[] }
+  a_extra: SetExtra
+  b_extra: SetExtra
+}
+
 export class ApiError extends Error {
   readonly status: number
 
@@ -141,6 +205,12 @@ export const decide = (runId: string, body: { approve: boolean; reason?: string 
 export const getLedger = () => request<Ledger>('/api/ledger')
 export const getResults = (name?: string) => request<Record<string, unknown>[]>(
   `/api/results${name ? `?name=${encodeURIComponent(name)}` : ''}`,
+)
+export const getSummary = (name: string) => request<Summary>(
+  `/api/summary?name=${encodeURIComponent(name)}`,
+)
+export const getComparison = (a: string, b: string) => request<Comparison>(
+  `/api/comparison?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`,
 )
 
 export function openRunEvents(

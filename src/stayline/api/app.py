@@ -21,6 +21,7 @@ from stayline.agent.llm import LLM, OpenRouterLLM
 from stayline.agent.run import run_task
 from stayline.backend.db import connect, reset_from_seed, snapshot
 from stayline.config import Settings, load_settings
+from stayline.api import evaluation
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -270,6 +271,29 @@ def create_app(
             return []
         return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()
                 if line.strip()]
+
+    def evaluation_rows(name: str) -> list[dict]:
+        path = evaluation.result_path(eval_dir, name)
+        if path is None:
+            raise HTTPException(400, "Invalid results name")
+        if not path.is_file():
+            raise HTTPException(404, "Results file not found")
+        return evaluation.load_rows(path)
+
+    @app.get("/api/summary")
+    def evaluation_summary(name: str = "results.jsonl") -> dict:
+        rows = evaluation_rows(name)
+        return evaluation.summary(name, rows, evaluation.domain_for(rows, eval_dir))
+
+    @app.get("/api/comparison")
+    def evaluation_comparison(a: str = "results.jsonl",
+                              b: str = "mistral/results.jsonl") -> dict:
+        rows_a = evaluation_rows(a)
+        rows_b = evaluation_rows(b)
+        return evaluation.comparison(
+            a, rows_a, evaluation.domain_for(rows_a, eval_dir),
+            b, rows_b, evaluation.domain_for(rows_b, eval_dir),
+        )
 
     if ui_dist.is_dir():
         app.mount("/", StaticFiles(directory=ui_dist, html=True), name="ui")
