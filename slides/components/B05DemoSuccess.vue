@@ -14,7 +14,7 @@ const cost = useCount(() => trace.total_cost_usd, () => shown(4), () => print.va
 const secs = useCount(() => trace.total_ms / 1000, () => shown(4), () => print.value, 1.8)
 
 // Recorded fallback: a slow zoom onto the part of each screenshot that proves the step.
-const focus = [[0.46, 0.42, 1.45], [0.82, 0.52, 1.85], [0.7, 0.55, 1.6], [0.62, 0.72, 1.5]]
+const focus = [[0.45, 0.45, 1.3], [0.84, 0.5, 1.7], [0.72, 0.55, 1.5], [0.55, 0.62, 1.15]]
 const zoom = (n: number) => {
   const [cx, cy, k] = focus[n - 1]
   const lim = (k - 1) / 2
