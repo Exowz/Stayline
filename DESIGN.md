@@ -24,12 +24,16 @@ Rules:
 
 ## Surfaces
 
-- **Canvas:** the main colour with two or three large, soft blurred fields of the second and loud colours at low strength, fixed to the viewport, so the glass has something to frost.
-- **Islands:** every region floats: the sidebar, the title bar, each content panel, the bottom dock. 16px gaps between islands and to the window edge. Radius 24px. No region touches the window edge.
-- **Light islands:** white at about 62% opacity, backdrop blur 26px with saturation 1.5, a one-pixel inner white edge, a soft low shadow tinted with the second colour.
-- **Dark islands (sidebar, dock):** the second colour at about 86% opacity, same blur, light text.
+Reference for the glass language: a downloaded "glassy dashboard" study (warm colours, not ours). What we keep from it is the layering, not the palette.
+
+- **Canvas:** a strong backdrop fixed to the viewport, so the glass has something to frost: graphite in the bottom-left, electric blue on the right and bottom, a light field at the top. Without saturated fields behind it, glass reads as flat white cards.
+- **Three layers:** the tinted sidebar island and one large glass pane float on the canvas; the content cards sit inside the pane. 16px gap between sidebar, pane and window edge; 16px between cards. Radii: pane 32px, cards 22px, sidebar 28px.
+- **Pane:** white at about 30%, backdrop blur 30px with saturation 1.5, a one-pixel inner white edge and a lit top edge, a long soft shadow tinted with the second colour. The page title sits directly on the pane.
+- **Cards (light):** white at 62%, inner white edge, a lit top edge, a soft low shadow. No backdrop blur on cards (they sit inside the pane, which already blurs the canvas).
+- **Sidebar and dock (dark glass):** a gradient of the second colour at about 70% to 78% (a little of the loud colour in the lower half), blur 30px, light text. The sidebar is collapsible: a 76px icon rail and a 236px open state, toggled by a round white button on its edge.
+- **Active navigation:** a white pill with second-colour text that slides between items.
 - Panels in a row are equal in width and height. Actions sit at the bottom of their panel.
-- Glass must stay readable on a projector: never lower the panel opacity below these values, and never put body text directly on the canvas.
+- Glass must stay readable on a projector: never lower a card below 62% white, and never put body text directly on the pane (only the page title and its subtitle).
 
 ## Type
 
@@ -39,7 +43,7 @@ Rules:
 
 ## Components
 
-- **Buttons:** 40px high, radius 12px. Primary: loud colour, white text, a soft glow of the same colour. Secondary: glass with a hairline. One primary per screen.
+- **Buttons:** 40px high, radius 12px (header actions may be pills). Primary: loud colour, white text, a soft glow of the same colour. Secondary: glass with a hairline. One primary per screen.
 - **Chips:** pills, 12.5px. Neutral (glass, hairline), confirmed (a tick in the second colour), about to change (loud tint, loud dark text, semibold).
 - **Plan list:** a vertical checklist. Each step has a round mark (tick when done, number when pending, loud fill when current), a title, one line of plain explanation, and its tool calls nested as rows (mono tool name, short result, duration right-aligned). Calls made by the harness are tagged "safety check".
 - **Approval card:** a kicker in loud dark, a question as the title, then sections split by hairlines: the contract, why this contract (evidence chips), what will change (blocked, still allowed, untouched), the source line, and the Reject and Approve row.
@@ -52,7 +56,12 @@ Run (plan, tool calls, approval), Ledger (three counters and the lineage table),
 
 ## Motion
 
-150 to 250 ms, ease-out, only for state changes: a step completing, the approval card resolving, the status pill changing. A slow pulse on the waiting dot. Respect reduced-motion.
+- State changes (a step completing, the approval card resolving, the status pill): 150 to 250 ms, ease-out. A slow pulse on the waiting dot.
+- Entrance: when a screen opens, its cards rise 16px and fade in over 600 ms with a 70 ms stagger (first four per row). They are not replayed by anything else.
+- Hover: KPI tiles, counters and model cards lift 4px (220 ms).
+- Navigation: the white pill slides (320 ms); the sidebar width eases over 360 ms.
+- No intro animation, no rolling digits: the demo must be readable at once.
+- Respect reduced-motion (all durations drop to near zero).
 
 ## Build notes
 
