@@ -80,6 +80,7 @@ export function hero(step: number): Formation {
 export const CONTRACT = { x: 1300, y: 540 }
 export const INNOCENT_AT = { x: 1590, y: 640 }
 export function twoButtons(step: number): Formation {
+  if (step >= 3) return { pts: base(0, 0, 0.3), stagger: 'random' }
   const pts = base(0, 0, step >= 3 ? 0.4 : 0.8)
   const over: Record<number, Partial<Pt>> = {
     [SEIZED]: { ...CONTRACT, z: 0, r: 8, a: 1, tone: 'blue', glow: 1.4 },
