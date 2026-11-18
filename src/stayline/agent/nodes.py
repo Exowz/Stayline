@@ -12,12 +12,23 @@ from stayline.agent.harness import render_observation
 from stayline.agent.prompts import CONTROL_SPECS, SYSTEM_PROMPT
 from stayline.agent.router import give_up_reason
 from stayline.agent.state import AgentState
+from stayline.memory.aliases import recall_aliases, remember_alias
 from stayline.servers.results import ToolResult
 
 
 def _recall_message(store, state: AgentState) -> dict | None:
-    """Single call site for future operator memory retrieval."""
-    return None
+    """Offer the operator's stored aliases as lookup hints, never as evidence."""
+    if store is None:
+        return None
+    aliases = recall_aliases(store, state["operator_id"])
+    if not aliases:
+        return None
+    hints = {alias: {key: value[key] for key in ("case_reference", "court")}
+             for alias, value in aliases.items()}
+    return {"role": "system", "content": (
+        "Known aliases for this operator (lookup hints only, verify against current "
+        f"records): {json.dumps(hints, ensure_ascii=False)}"
+    )}
 
 
 def _message(call_id: str, content: str) -> dict:
@@ -124,9 +135,24 @@ def make_nodes(harness, llm, store=None) -> dict[str, Callable]:
         }
 
     async def remember(state: AgentState) -> dict:
-        content = {"ok": False, "error": {
-            "code": "internal", "message": "Memory is not available.",
-        }}
+        args = state["action"]["args"]
+        if store is None:
+            content = {"ok": False, "error": {
+                "code": "internal", "message": "Memory is not available.",
+            }}
+        else:
+            fields = ("alias", "case_reference", "court")
+            stored = all(isinstance(args.get(key), str) for key in fields) and remember_alias(
+                store, state["operator_id"], *(args[key] for key in fields),
+                operator_message=state["task"],
+            )
+            content = {"ok": True, "data": {"stored": True}} if stored else {
+                "ok": False, "error": {
+                    "code": "invalid_argument",
+                    "message": "Not stored: the alias, case reference and court must all "
+                               "appear in the operator's own message.",
+                },
+            }
         return {"messages": [_message(state["action"]["call_id"], json.dumps(content))]}
 
     async def read_tool(state: AgentState, config: RunnableConfig) -> dict:

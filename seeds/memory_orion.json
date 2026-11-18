@@ -1,0 +1,17 @@
+{
+  "extends": "base.json",
+  "contracts": [
+    {"contract_id": "C-0001", "version": 4}
+  ],
+  "operation_requests": [
+    {"request_id": "R-0002", "contract_id": "C-0002"},
+    {"request_id": "R-0004", "contract_id": "C-0002"}
+  ],
+  "restriction_ledger": [
+    {"contract_id": "C-0001", "restriction": "rachat", "notice_id": "N-2026-0417", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-12T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0001", "restriction": "renonciation", "notice_id": "N-2026-0417", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-12T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0001", "restriction": "nantissement", "notice_id": "N-2026-0417", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-12T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0001", "restriction": "acceptation_benefice", "notice_id": "N-2026-0417", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-12T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0001", "restriction": "avance", "notice_id": "N-2026-0417", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-12T09:00:00+00:00", "note": ""}
+  ]
+}
