@@ -421,22 +421,23 @@ uvx --from langgraph-cli langgraph dev   # LangGraph Studio fallback (CLI not a 
 
 ## Results
 
-<!-- RESULT: fill every cell below from eval/summary.md after the baseline run (30 scenarios, 3 repeats). -->
+Main model: `deepseek/deepseek-v4.1-flash` through OpenRouter, always-yes approver, 30 scenarios, 3 repeats each (90 runs). Source: [`eval/runs/2026-11-18-baseline-2/summary.md`](eval/runs/2026-11-18-baseline-2/summary.md). The comparison model (`mistralai/mistral-small-2603`) is reported on the Models screen.
 
-Main model: `deepseek/deepseek-v4.1-flash` through OpenRouter. Comparison model: `mistralai/mistral-small-2603`.
+| Kind | Scenarios | Passed | Pass rate | Wilson 95% | pass^3 |
+|------|-----------|--------|-----------|------------|--------|
+| normal | 14 | 40 / 42 | 95.2% | 68.5% to 98.7% | 92.9% |
+| ambiguous | 5 | 15 / 15 | 100.0% | 56.6% to 100.0% | 100.0% |
+| impossible | 5 | 15 / 15 | 100.0% | 56.6% to 100.0% | 100.0% |
+| adversarial | 6 | 18 / 18 | 100.0% | 61.0% to 100.0% | 100.0% |
+| **all** | **30** | **88 / 90** | **97.8%** | **83.3% to 99.4%** | **96.7%** |
 
-| Kind | Scenarios | Pass rate (Wilson 95%) | pass^3 |
-|------|-----------|------------------------|--------|
-| normal | 14 | to be filled | to be filled |
-| ambiguous | 5 | to be filled | to be filled |
-| impossible | 5 | to be filled | to be filled |
-| adversarial | 6 | to be filled | to be filled |
+| Cost per success | p50 / p95 latency | Under-blocking | Over-blocking | Wrong-contract changes | Lineage completeness |
+|------------------|-------------------|----------------|---------------|------------------------|----------------------|
+| $0.0015 | 8.8 s / 31.9 s | 0 | 0 | 0 | 100% |
 
-| Cost per success | p50 latency | p95 latency | Under-blocking | Over-blocking |
-|------------------|-------------|-------------|----------------|---------------|
-| to be filled | to be filled | to be filled | to be filled | to be filled |
+The first baseline passed 75 of 90 (83.3%). The five scenarios that failed every time had specific causes, which we fixed and measured: an approval card shown for a deceased or surrendered contract, an exhausted reply budget reported as `done`, a search that never stopped, and a request marked instead of refused. Details and the limits that remain (the memory scenario s14 still fails two repeats in three) are in the error analysis.
 
-**Error analysis.** [`docs/error-analysis.md`](docs/error-analysis.md) records, for each failure: what failed, why (read from the first wrong span), what we changed, the figures before and after, and what remains. The first entry: on a first look at 15 scenarios, 10 passed. The five failures were permitted operations that were never executed, because the agent kept calling `get_rule` with invented ids instead of trusting the ledger. One generic sentence in the system prompt and a model-call cap that follows the step budget brought the same 15 scenarios to 15 out of 15.
+**Error analysis.** [`docs/error-analysis.md`](docs/error-analysis.md) records, for each failure: what failed, why (read from the first wrong span), what we changed, the figures before and after, and what remains. Three entries so far. Entry 1: on a first look at 15 scenarios, 10 passed, because the agent called `get_rule` with invented ids instead of trusting the ledger; one generic prompt sentence brought them to 15 of 15. Entry 2: the real justice server exposed a misleading tool description (3 of 6 runs passed, then 6 of 6). Entry 3: the full baseline, 75 then 88 of 90.
 
 ---
 
@@ -506,4 +507,4 @@ Mock data and a mock feed of notices. One operator at a time. The article 706-15
 
 **Version**: 1.0 at code freeze
 **Last updated**: November 2026
-**Status**: 🚧 In development, final results pending the baseline run
+**Status**: 🚧 In development, baseline measured, comparison and final polish pending
