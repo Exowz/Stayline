@@ -71,10 +71,18 @@ def test_plain_text_reminds_once():
     assert route(state) == "remind"
 
 
-def test_plain_text_ends_after_reminder():
+def test_plain_text_gives_up_after_reminder():
     state = make_state(action={"type": "none"}, reminded=True)
 
-    assert route(state) == "__end__"
+    assert route(state) == "give_up"
+
+
+def test_give_up_reason_is_error_after_reminder_with_no_action():
+    from stayline.agent.router import give_up_reason
+
+    state = make_state(action={"type": "none"}, reminded=True)
+
+    assert give_up_reason(state) == "error"
 
 
 def test_remember_alias_does_not_consume_step_budget():

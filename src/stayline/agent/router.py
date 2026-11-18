@@ -13,7 +13,7 @@ def router(state: AgentState) -> str:
     if state["model_calls"] >= state["max_model_calls"]:
         return "give_up"
     if action["type"] == "none":
-        return "__end__" if state["reminded"] else "remind"
+        return "give_up" if state["reminded"] else "remind"
     if action["tool"] == "remember_alias":
         return "remember"
     if len(state["tool_calls"]) >= state["max_steps"]:
@@ -27,4 +27,6 @@ def give_up_reason(state: AgentState) -> str:
     """Name the budget that stopped routing."""
     if state["model_calls"] >= state["max_model_calls"]:
         return "max_model_calls"
+    if state["action"] is not None and state["action"]["type"] == "none" and state["reminded"]:
+        return "error"
     return "max_steps"

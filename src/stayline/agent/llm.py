@@ -38,7 +38,7 @@ class OpenRouterLLM:
         started = perf_counter()
         reply = await self.client.chat.completions.create(
             model=self.settings.model, messages=messages, tools=tools,
-            temperature=0, max_tokens=2000,
+            temperature=0, max_tokens=self.settings.max_tokens,
         )
         elapsed_ms = round((perf_counter() - started) * 1000)
         usage = reply.usage

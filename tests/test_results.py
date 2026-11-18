@@ -1,5 +1,8 @@
 """Tests for typed tool errors and environment settings."""
 
+from types import SimpleNamespace
+
+from stayline.agent.llm import OpenRouterLLM
 from stayline.config import load_settings
 from stayline.servers.results import ToolError, parse_tool_error, tool_error
 
@@ -26,6 +29,7 @@ def test_settings_defaults(monkeypatch, tmp_path):
         "OPENROUTER_API_KEY",
         "OPENROUTER_MODEL",
         "OPENROUTER_BASE_URL",
+        "OPENROUTER_MAX_TOKENS",
         "STAYLINE_DB",
         "STAYLINE_MEMORY_DB",
         "STAYLINE_CHECKPOINT_DB",
@@ -45,6 +49,7 @@ def test_settings_defaults(monkeypatch, tmp_path):
     assert settings.checkpoint_db_path == "stayline-checkpoints.sqlite"
     assert settings.insurer_id == "STAYLINE-VIE"
     assert settings.max_model_calls == 12
+    assert settings.max_tokens == 4000
     assert settings.tool_timeout_s == 10.0
     assert settings.model_timeout_s == 90.0
     assert settings.phoenix_endpoint is None
@@ -55,12 +60,39 @@ def test_settings_overrides_win_over_environment(monkeypatch, tmp_path):
     monkeypatch.setenv("OPENROUTER_MODEL", "environment-model")
     monkeypatch.setenv("STAYLINE_DB", "environment.sqlite")
     monkeypatch.setenv("STAYLINE_FAULT", "rate_limit")
+    monkeypatch.setenv("OPENROUTER_MAX_TOKENS", "5000")
 
-    settings = load_settings(model="override-model", db_path="override.sqlite")
+    from_environment = load_settings()
+    settings = load_settings(model="override-model", db_path="override.sqlite", max_tokens=6000)
 
+    assert from_environment.max_tokens == 5000
+    assert settings.max_tokens == 6000
     assert settings.model == "override-model"
     assert settings.db_path == "override.sqlite"
     assert settings.fault == "rate_limit"
+
+
+async def test_model_uses_configured_reply_budget():
+    settings = load_settings(max_tokens=6000)
+    model = OpenRouterLLM(settings)
+    captured = {}
+
+    async def create(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(
+                model_dump=lambda **_: {"role": "assistant", "content": "ok"},
+            ))],
+            usage=SimpleNamespace(prompt_tokens=2, completion_tokens=1),
+            model="fake-model",
+        )
+
+    model.client = SimpleNamespace(chat=SimpleNamespace(
+        completions=SimpleNamespace(create=create),
+    ))
+    await model.complete([{"role": "user", "content": "hi"}], [])
+
+    assert captured["max_tokens"] == 6000
 
 
 def test_settings_repr_hides_api_key(monkeypatch, tmp_path):

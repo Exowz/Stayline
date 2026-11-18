@@ -11,7 +11,7 @@ from stayline.agent.graph import build_graph
 from stayline.agent.prompts import SYSTEM_PROMPT
 from stayline.agent.run import always_yes, run_task
 from stayline.agent.state import initial_state
-from stayline.backend.db import connect, snapshot
+from stayline.backend.db import connect, reset_from_seed, snapshot
 from stayline.config import load_settings
 from tests.fakes import FlakyHarness, ScriptedLLM
 from tests.helpers import TEST_MODULES
@@ -199,13 +199,54 @@ async def test_step_budget_stop(seeded_db):
     assert snapshot(seeded_db)["contracts"][CONTRACT]["restrictions"] == {}
 
 
-async def test_plain_text_gets_one_reminder_then_stops(seeded_db):
+async def test_plain_text_twice_is_error_and_never_writes(seeded_db):
     before = snapshot(seeded_db)
     record, llm = await run_script(seeded_db, [{"text": "First."}, {"text": "Second."}])
-    assert record["stop_reason"] == "done"
+    assert record["stop_reason"] == "error"
     assert sum("End the run by calling finish" in str(message)
                for messages in llm.seen for message in messages) == 1
     assert snapshot(seeded_db) == before
+
+
+@pytest.mark.parametrize("seed,contract_id,target,reason", [
+    ("deceased_target.json", "C-0005", {
+        "last_name": "Lefevre", "first_names": "Paul",
+        "birth_date": "1968-02-09", "birth_place_code": "59350",
+    }, "deceased"),
+    ("surrendered_target.json", "C-0006", {
+        "last_name": "Dubois", "first_names": "Anne",
+        "birth_date": "1975-08-16", "birth_place_code": "44109",
+    }, "surrendered"),
+])
+async def test_invalid_seizure_target_refused_before_approval(
+    tmp_path, seed, contract_id, target, reason,
+):
+    seed_path = Path(__file__).resolve().parents[1] / "seeds" / seed
+    db_path = str(tmp_path / "variant.sqlite")
+    reset_from_seed(str(seed_path), db_path)
+    before = snapshot(db_path)
+    events = []
+    steps = [
+        {"tool": "get_notice", "args": {"notice_id": NOTICE}},
+        {"tool": "find_contracts", "args": {
+            "subscriber_identity": target, "contract_reference": None,
+        }},
+        {"tool": "get_contract", "args": {"contract_id": contract_id}},
+        {"tool": "apply_seizure", "args": {
+            "notice_id": NOTICE, "contract_id": contract_id,
+        }},
+        {"tool": "refuse", "args": {"reason": "Target cannot be seized."}},
+    ]
+
+    record, llm = await run_script(db_path, steps, on_event=events.append)
+
+    assert record["stop_reason"] == "refused"
+    assert record["approvals"] == []
+    assert not any(event["type"] == "approval_needed" for event in events)
+    assert "apply_seizure" not in [entry["tool"] for entry in record["tool_calls"]]
+    assert "operation_not_permitted" in str(llm.seen[-1])
+    assert reason in str(llm.seen[-1])
+    assert snapshot(db_path) == before
 
 
 async def test_bad_json_arguments_do_not_crash(seeded_db):
@@ -269,3 +310,12 @@ def test_prompt_has_no_scenario_text():
         pytest.skip("Scenario file is absent")
     for line in scenarios.read_text().splitlines():
         assert json.loads(line)["task"] not in SYSTEM_PROMPT
+
+
+def test_prompt_directs_refusal_for_missing_contract_and_forbidden_task():
+    assert ("If searching for the target by identity and by policy number both return "
+            "contract_not_found, the contract is not held by this insurer: stop searching "
+            "and call refuse.") in SYSTEM_PROMPT
+    assert ("If the task itself asks you to bypass, ignore or lift a restriction, or to do "
+            "something the rules never allow, call refuse and change nothing. Setting a "
+            "request status is only for adviser requests you are processing normally.") in SYSTEM_PROMPT
