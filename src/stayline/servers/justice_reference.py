@@ -74,8 +74,8 @@ def resolve_issuing_authority(
     court_id: CourtId, judge_role: JudgeRole, procedure_type: ProcedureType
 ) -> dict:
     """Check whether a judge role may order a seizure in a procedure at a court (CPP 706-153);
-    use before applying a notice. Returns valid true or false and the legal basis. It does
-    not authenticate a document. Example: court_id="TJ-NANTES", judge_role="jld",
+    use before applying a notice. Returns valid true or false and the legal basis, which is a
+    citation and not a rule id. It does not authenticate a document. Example: court_id="TJ-NANTES", judge_role="jld",
     procedure_type="enquete_preliminaire"."""
     with closing(connect(os.environ["STAYLINE_DB"])) as db:
         court = db.execute(
@@ -102,9 +102,10 @@ def resolve_issuing_authority(
 
 @mcp.tool(annotations=READ)
 def get_rule(rule_id: RuleId, as_of_date: date) -> dict:
-    """Read the version of a rule in force on a date; use to learn which restrictions a
-    seizure writes. Returns rule id, version, start date and the restriction list.
-    Example: rule_id="CPP-123-456", as_of_date="2020-06-30"."""
+    """Read one version of a rule by its exact rule id, as in force on a date. Rule ids are
+    not listed by any tool, so call this only with an id you were given. Do not use it to find
+    what a seizure blocks: the approval step reads the rule itself. Returns rule id, version,
+    start date and the restriction list. Example: rule_id="CPP-123-456", as_of_date="2020-06-30"."""
     with closing(connect(os.environ["STAYLINE_DB"])) as db:
         row = db.execute(
             "SELECT rule_id, version, valid_from, restrictions FROM rules "

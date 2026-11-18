@@ -13,7 +13,7 @@ async def main() -> None:
     with TemporaryDirectory() as directory:
         db = str(Path(directory) / "stayline.sqlite")
         reset_from_seed(str(root / "seeds/base.json"), db)
-        record = await run_task("Apply seizure notice N-2026-0417.", operator_id="smoke", run_id="smoke", settings=load_settings(db_path=db), max_steps=30, approver=always_yes, modules=("tests.justice_stub", "stayline.servers.insurer_contracts"))
+        record = await run_task("Apply seizure notice N-2026-0417.", operator_id="smoke", run_id="smoke", settings=load_settings(db_path=db), max_steps=30, approver=always_yes, modules=("stayline.servers.justice_reference", "stayline.servers.insurer_contracts"))
         print(record["stop_reason"], [call["tool"] for call in record["tool_calls"]])
         print(sum(item["tokens_in"] + item["tokens_out"] for item in record["usage"]), sum(item["cost_usd"] for item in record["usage"]))
         print(snapshot(db)["contracts"]["C-0001"])
