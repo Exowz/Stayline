@@ -12,7 +12,7 @@ const n = useCount(() => (click.value >= 2 ? a.passed : b.passed), () => active.
 const imp = (x: typeof a) => x.by_kind.find(k => k.kind === 'impossible')!
 const failIds = [...new Set(deck.baseline1_runs.filter(r => !r.passed).map(r => r.id))]
 const failX = failIds.map(id => ({ id, x: runPos(deck.baseline1_runs.find(r => r.id === id)!, BIG).x, kept: deck.runs.some(r => r.id === id && !r.passed) }))
-const changes = ['The code checks the contract can take a seizure before any card is shown.', 'A larger reply budget.', 'An empty run ends as an error, not done.', 'Two generic sentences in the prompt.']
+const changes = ['Check the contract can take a seizure before any card is shown.', 'A larger reply budget.', 'An empty run ends as an error, not done.', 'Two generic prompt sentences.']
 </script>
 
 <template><main class="slide">
@@ -47,12 +47,12 @@ const changes = ['The code checks the contract can take a seizure before any car
 .every { position: absolute; left: 175px; top: 690px; font-size: 23px; color: var(--muted); }
 .panel { top: 740px; height: 235px; padding: 20px 26px; }
 .panel .tag { margin-bottom: 8px; font-size: 17px; }
-.panel p { font-size: 23px; line-height: 1.28; color: var(--ivory); margin: 0; }
-.strong { margin-top: 8px !important; font-weight: 650; }
-.c1 { left: 100px; width: 560px; } .c2 { left: 690px; width: 560px; } .c3 { left: 1280px; width: 540px; }
-ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; } li { font-size: 22px; line-height: 1.25; padding-left: 20px; position: relative; }
+.panel p { font-size: 26px; line-height: 1.28; color: var(--ivory); margin: 0; }
+.strong { margin-top: 10px !important; font-weight: 650; font-size: 29px !important; color: var(--fail) !important; }
+.c1 { left: 100px; width: 630px; } .c2 { left: 760px; width: 540px; } .c3 { left: 1330px; width: 490px; }
+ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; } li { font-size: 21px; line-height: 1.25; padding-left: 20px; position: relative; }
 li::before { content: ''; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 10px var(--blue-glow); }
-.big.sm { font-size: 70px; display: inline; text-shadow: none; letter-spacing: -.03em; } .big.sm small { font-size: .55em; color: var(--blue); }
+.big.sm { font-size: 84px; display: inline; text-shadow: none; letter-spacing: -.03em; } .big.sm small { font-size: .55em; color: var(--blue); }
 .lbl { font-size: 22px; color: var(--muted); }
-.rem { margin-top: 8px !important; font-size: 20px !important; color: var(--muted) !important; }
+.rem { margin-top: 8px !important; font-size: 21px !important; color: var(--muted) !important; }
 </style>

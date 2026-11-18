@@ -53,16 +53,16 @@ const lo = s.overall.ci_low * 100, hi = s.overall.ci_high * 100, pk = s.overall.
 .kind .tag { color: var(--muted); font-size: 21px; }
 .kind .res { font-size: 46px; font-weight: 500; letter-spacing: -.03em; } .kind .res small { font-size: .5em; color: var(--muted); }
 .fl { position: absolute; top: 612px; font-size: 23px; color: var(--fail); }
-.panel { top: 770px; height: 195px; padding: 20px 28px; }
+.panel { top: 745px; height: 225px; padding: 22px 30px; }
 .panel .tag { margin-bottom: 4px; font-size: 19px; }
-.pk { left: 100px; width: 620px; } .cost { left: 760px; width: 520px; } .err { left: 1320px; width: 500px; }
-.big.sm { font-size: 64px; letter-spacing: -.03em; display: inline; text-shadow: none; }
-.line .big { font-size: 78px; } .line small { font-size: .5em; }
+.pk { left: 100px; width: 700px; } .cost { left: 830px; width: 470px; } .err { left: 1330px; width: 490px; }
+.big.sm { font-size: 84px; letter-spacing: -.03em; display: inline; text-shadow: none; }
+.line .big { font-size: 104px; } .line small { font-size: .5em; }
 .axis { position: relative; height: 10px; margin: 6px 0 4px; border-radius: 6px; background: rgba(238, 240, 246, .1); }
 .axis .span { position: absolute; top: 0; height: 10px; border-radius: 6px; background: var(--blue); box-shadow: 0 0 18px var(--blue-glow); }
 .axis .pt { position: absolute; top: -7px; width: 3px; height: 24px; background: var(--ivory); }
 .ticks { display: flex; justify-content: space-between; font-size: 18px; color: var(--muted); }
 .lbl { font-size: 23px; color: var(--muted); }
 .panel p { margin: 6px 0 0; } .panel .lbl { font-family: var(--sans); }
-.lat { font-size: 24px; margin-top: 12px !important; }
+.lat { font-size: 26px; margin-top: 12px !important; }
 </style>
