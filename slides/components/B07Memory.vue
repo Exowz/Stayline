@@ -1,22 +1,15 @@
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
-import gsap from 'gsap'
 import { useBeat } from './useBeat'
 import Headline from './Headline.vue'
 import { phase } from '../world/pages'
 import { ORION } from '../world/formations'
 
 const { shown, print, click } = useBeat()
-let call: gsap.core.Tween | undefined
 watch(() => [click.value, print.value], () => {
-  call?.kill()
-  if (print.value) { phase.value = 'with'; return }
-  if (click.value >= 1) {
-    phase.value = 'without'
-    call = gsap.delayedCall(3.6, () => { phase.value = 'with' })
-  } else phase.value = 'none'
+  phase.value = print.value || click.value >= 2 ? 'with' : click.value >= 1 ? 'without' : 'none'
 }, { immediate: true })
-onBeforeUnmount(() => { call?.kill(); phase.value = 'none' })
+onBeforeUnmount(() => { phase.value = 'none' })
 </script>
 
 <template><main class="slide">
@@ -31,12 +24,10 @@ onBeforeUnmount(() => { call?.kill(); phase.value = 'none' })
   <div class="panel two rv rv-l" :class="{ on: shown(1) }">
     <span class="tag">Run 2 · a brand new run</span>
     <p class="q">“A request came in on the Orion contract, process it.”</p>
-    <div class="out" :class="{ 'is-with': phase === 'with', 'is-without': phase === 'without' }">
-      <p class="no"><b>Without memory</b> the request is ambiguous. The agent asks, and changes nothing.</p>
-      <p class="yes"><b>With memory</b> the alias finds the seized contract, and the agent handles the request.</p>
-    </div>
+    <p class="no rv" :class="{ on: shown(1) }"><b>Without memory</b> the request is ambiguous. The agent asks, and changes nothing.</p>
+    <p class="yes rv" :class="{ on: shown(2) }"><b>With memory</b> the alias finds the seized contract, and the agent handles the request.</p>
   </div>
-  <p class="hint rv" :class="{ on: shown(1) }">The alias is only a hint. The current records still decide, and text from a tool can never write to memory.</p>
+  <p class="hint rv" :class="{ on: shown(2) }">The alias is only a hint. The current records still decide, and text from a tool can never write to memory.</p>
 
   <div class="lab la rv" :class="{ on: shown(1) }" :style="{ left: `${ORION.a.x + 20}px`, top: `${ORION.a.y - 74}px` }"><b>seized contract</b><span>instruction 2026/00417</span></div>
   <div class="lab lb rv" :class="{ on: shown(1) }" :style="{ left: `${ORION.b.x + 24}px`, top: `${ORION.b.y + 12}px` }"><b>another candidate</b></div>
@@ -49,13 +40,9 @@ onBeforeUnmount(() => { call?.kill(); phase.value = 'none' })
 .two { top: 520px; }
 .q { font: 400 40px/1.15 var(--serif); letter-spacing: -.01em; }
 .st { margin-top: 14px; font-size: 22px; color: var(--muted); } .st b { color: var(--blue); font-weight: 500; }
-.out { position: relative; margin-top: 18px; min-height: 120px; }
-.out p { position: absolute; inset: 0 auto auto 0; width: 100%; font-size: 26px; line-height: 1.3; transition: opacity .7s, transform .7s; }
-.out b { font-weight: 650; }
-.out .no { color: var(--muted); } .out .yes { color: var(--ivory); }
-.out .yes b { color: var(--blue); }
-.out .no, .out .yes { opacity: 0; transform: translateY(10px); }
-.out.is-without .no, .out.is-with .yes { opacity: 1; transform: none; }
+.no, .yes { margin-top: 16px; font-size: 26px; line-height: 1.3; }
+.no { color: var(--muted); } .yes { color: var(--ivory); }
+.yes b { color: var(--blue); } b { font-weight: 650; }
 .hint { position: absolute; left: 100px; top: 900px; width: 1700px; font-size: 23px; color: var(--muted); }
 .lab { position: absolute; z-index: 2; display: grid; font-size: 22px; color: var(--muted); }
 .lab b { font: 500 23px var(--mono); color: var(--blue); }

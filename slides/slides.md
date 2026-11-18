@@ -143,13 +143,16 @@ If asked: the grader fails a run that calls a forbidden tool even when the call 
 
 <B07Memory />
 <span v-click class="click-register" />
+<span v-click class="click-register" />
 
 <!--
 **KHADIDJA · about 40 seconds**
 
 Now memory. An operator tells the agent: Orion is instruction 2026 slash 00417 at the Paris court. The agent stores that alias, per operator.
 
-[click] Later, in a brand new run, the operator says: a request came in on the Orion contract, process it. With memory, the agent finds the seized contract and handles the request. Without memory, the request is ambiguous, so the agent asks and changes nothing.
+[click] Later, in a brand new run, the operator says: a request came in on the Orion contract, process it. Without memory, the request is ambiguous, so the agent asks and changes nothing.
+
+[click] With memory, the agent finds the seized contract and handles the request.
 
 The alias is only a hint. The current records still decide, and text that comes back from a tool can never write to memory.
 

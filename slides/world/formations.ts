@@ -73,7 +73,8 @@ export function hero(step: number): Formation {
     links.push({ a: SEIZED, b: SATS[k], tone: 'blue' })
   }
   if (step >= 1) marks.push({ i: SEIZED, r: 30, tone: 'blue' })
-  return { pts: put(pts, over), links, marks, pose: { zoom: 1 } }
+  if (step >= 6) marks.push({ i: SEIZED, r: FAN_R + 34, tone: 'blue', pulse: false })
+  return { pts: put(pts, over), links, marks, pose: { yaw: 0.06 } }
 }
 
 export const CONTRACT = { x: 1300, y: 540 }
@@ -150,7 +151,7 @@ export function graph(step: number): Formation {
 }
 
 // ---------- scenes 5 and 6: the trace ----------
-export const TRACE = { x0: 104, x1: 1080, y: 952 }
+export const TRACE = { x0: 104, x1: 1140, y: 964 }
 export function trace(step: number, key: 's01' | 's14' = 's01'): Formation {
   const pts = quiet()
   const t = deck.traces[key]
@@ -242,10 +243,30 @@ export function compare(): Formation {
   return { pts, stagger: 'x' }
 }
 
+export const FINAL_AT = { x: 960, y: 150 }
 export function finale(): Formation {
-  const pts = base(-240, 0, 0.55)
-  put(pts, { [SEIZED]: { x: 1180, y: 380, z: 0, r: 9, a: 1, tone: 'blue', glow: 1.8 } })
-  return { pts, marks: [{ i: SEIZED, r: 34, tone: 'blue' }] }
+  const pts = Array.from({ length: N }, (_, i) => dust(i, i % 5 === 0 ? 0.28 : 0.14))
+  const over: Record<number, Partial<Pt>> = {}
+  const links: Link[] = []
+  // a halo of contracts closing round the wordmark, slowly turning
+  const halo = 360
+  for (let k = 0; k < halo; k++) {
+    const i = 600 + k
+    const phase = (k / halo) * Math.PI * 2
+    const jr = 1 + gauss(i, 61) * 0.035
+    const x0 = 960 + Math.cos(phase) * 820 * jr, y0 = 600 + Math.sin(phase) * 330 * jr
+    over[i] = {
+      x: x0, y: y0, z: gauss(i, 62) * 70, r: 1.5 + hash(i, 63) * 1.6, a: 0.75, tone: k % 12 === 0 ? 'blue' : 'ink',
+      motion: t => [960 + Math.cos(phase + t * 0.06) * 820 * jr - x0, 600 + Math.sin(phase + t * 0.06) * 330 * jr - y0],
+    }
+  }
+  over[SEIZED] = { ...FINAL_AT, z: 0, r: 8, a: 1, tone: 'blue', glow: 1.8 }
+  SATS.forEach((id, k) => {
+    const ang = -Math.PI / 2 + (k - 2) * 0.62
+    over[id] = { x: FINAL_AT.x + Math.cos(ang) * 58, y: FINAL_AT.y + Math.sin(ang) * 58 + 40, z: 0, r: 3.6, a: 1, tone: 'blue', glow: 0.9 }
+    links.push({ a: SEIZED, b: id, tone: 'blue' })
+  })
+  return { pts: put(pts, over), links, marks: [{ i: SEIZED, r: 34, tone: 'blue' }], stagger: 'random' }
 }
 
 export function calm(): Formation {

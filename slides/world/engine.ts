@@ -125,6 +125,11 @@ export class World {
     }
     this.poseTo = { yaw: f.pose?.yaw ?? 0, zoom: f.pose?.zoom ?? 1, x: f.pose?.x ?? 0, y: f.pose?.y ?? 0 }
     this.drift = f.drift ?? 1
+    // the camera arrives: a dolly-in with a little roll on every slide change, a small push on every click
+    if (!first) {
+      if (big) { this.pose.zoom *= 1.2; this.pose.yaw += (this.seed % 2 ? 1 : -1) * 0.2 }
+      else this.pose.zoom *= 1.025
+    }
     this.started = performance.now()
     this.overlay = 0
     if (instant || this.still) {
