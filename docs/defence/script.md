@@ -58,7 +58,7 @@ The agent is a LangGraph graph.
 
 [click] But when it asks for a dangerous write, the loop stops and code takes over, in four steps. Prepare re-reads the contract and builds the approval card from the backend, not from the model's words. Approve pauses the graph with an interrupt, and nothing is written before it. Write uses the exact version the human saw. Verify reads the contract back to confirm.
 
-[click] Why one agent? The job is one linear task with one set of tools. A second agent would add hand-offs and cost, and we measured no gain, so we did not build one. A full seizure takes [RESULT: tool calls per seizure run] tool calls on one agent. The budgets are in code too: a step limit, a model-call limit, and a stop reason read from the state.
+[click] Why one agent? The job is one linear task with one set of tools. A second agent would add hand-offs and cost, and we measured no gain, so we did not build one. A full seizure takes about ten tool calls on one agent. <!-- source: eval/runs/2026-11-18-baseline-2/results.jsonl, s01, 10 steps in all three repeats --> The budgets are in code too: a step limit, a model-call limit, and a stop reason read from the state.
 
 If asked: the router is a pure function tested without a model. Approval is one exact versioned action, so a stale version sends the run back to prepare and the human approves the new state. `set_request_status` needs no approval because it cannot execute anything.
 
@@ -76,7 +76,7 @@ Here is scenario s01, a clean seizure notice, on the base seed.
 
 [click] I approve. The agent writes, then reads the contract back, and the ledger shows five lines, each with its notice and rule version.
 
-[click] And now the proof. A success is not the agent saying it is done. We read the trace and the database. This run made [RESULT: s01 model calls] model calls and [RESULT: s01 tool calls] tool calls, used [RESULT: s01 tokens] tokens and cost [RESULT: s01 cost] dollars.
+[click] And now the proof. A success is not the agent saying it is done. We read the trace and the database. This run made six model calls and ten tool calls, used about twenty-two thousand tokens, and cost two tenths of a cent. <!-- source: baseline-2 s01#0: 6 model calls, 10 steps, 21303+923 tokens, $0.0022, 7.1 s -->
 
 If asked: the approver in the evaluation always says yes, so the evaluation measures the agent and the server, not the human. The live demo shows the human step.
 
@@ -84,17 +84,17 @@ If asked: the approver in the evaluation always says yes, so the evaluation meas
 
 **EWAN · about 70 seconds**
 
-> Pick the failed run after the baseline. Choose the one whose first wrong span is easiest to read.
+> Failed run chosen from the real failures: baseline 2, s14 repeat 2, trace `eval/traces/s14#2-ae34d8b1.jsonl`.
 
-Now a run that failed, because a result you never see fail is not a result. We read it the same way, from the trace and not from what the agent says.
+Now a run that failed, because a result you never see fail is not a result. We read it from the trace, not from what the agent says. This is one of the two runs out of ninety that failed in our final measurement, and we chose not to hide it.
 
-[click] This is scenario [RESULT: failed scenario id], of the kind [RESULT: its kind]. The task was [RESULT: the task in one sentence].
+[click] This is scenario s14, a memory scenario: a request came in on the Orion contract, process it. <!-- source: baseline-2 s14#2 -->
 
-[click] Here is the first wrong span. Every earlier step was fine. At this one, [RESULT: what the agent did at that span, in one sentence]. A trace lets us point at one exact step, not at a whole run, and that is what makes a failure fixable.
+[click] Here is the first wrong span. Every step before it was fine. At this one, the model used its entire budget of four thousand tokens, nineteen seconds, thinking, and returned nothing. Then it did it again.
 
-[click] The final state of the database shows the consequence. The grader compared it with the state we expected, and found [RESULT: what the grader found wrong]. The run stopped with the reason [RESULT: stop reason], which the grader reads from the state.
+[click] The grader finds a request still pending that should have been marked unavailable. The run stops with the reason error, read from the state.
 
-What it tells us: [RESULT: the cause in one sentence]. That is exactly the kind of entry we come back to in the error analysis, with the figures before and after the change.
+What it tells us: a reasoning model can spend its whole reply budget on hidden thinking. Before our fix, the harness would have called this run done.
 
 If asked: the grader fails a run that calls a forbidden tool even when the call itself failed.
 
@@ -116,15 +116,15 @@ If asked: the store is per operator, so another operator does not see the alias.
 
 > One table, one chart. Source: `eval/summary.md`.
 
-Here are the results on our thirty scenarios: fourteen normal, five ambiguous, five impossible and six adversarial, each run [RESULT: repeats] times.
+Here are the results on our thirty scenarios, each run three times. <!-- source: eval/runs/2026-11-18-baseline-2/summary.md -->
 
-[click] Normal scenarios: [RESULT: normal pass rate with interval]. Ambiguous: [RESULT: ambiguous pass rate]. Impossible: [RESULT: impossible pass rate]. Adversarial, with an instruction hidden inside a tool result: [RESULT: adversarial pass rate].
+[click] Normal scenarios: forty out of forty-two. Ambiguous, impossible, and adversarial, with an instruction hidden inside a tool result: every run passed. Overall, eighty-eight out of ninety.
 
-[click] We report pass to the power of k, because an agent that succeeds only some of the time cannot be trusted with a freeze. It is [RESULT: pass^k] across [RESULT: k] repeats. The intervals are Wilson intervals, because with so few runs, a plain percentage hides the doubt, and we prefer to show it.
+[click] We report pass to the power of k, because an agent that succeeds only some of the time cannot be trusted with a freeze. It is ninety-seven percent across three repeats, with an interval from eighty-three to ninety-nine. We use Wilson intervals, because with so few runs a plain percentage hides the doubt.
 
-[click] Cost per success is [RESULT: cost per success] dollars, with a median latency of [RESULT: p50] seconds and a p95 of [RESULT: p95].
+[click] Cost per success is fifteen hundredths of a cent, with a median latency of nine seconds and a p95 of thirty-two.
 
-And the two errors that matter for this domain, which a single pass rate would hide. Under-blocking, a seizure missed, happened [RESULT: under-blocking count] times. Over-blocking, too much changed, happened [RESULT: over-blocking count] times.
+And the two errors that matter here: under-blocking, a seizure missed, zero times. Over-blocking, too much changed, zero times.
 
 If asked: the grader was checked by running it on a final state we built by hand, for a pass and for each kind of failure.
 
@@ -132,17 +132,17 @@ If asked: the grader was checked by running it on a final state we built by hand
 
 **KHADIDJA · about 70 seconds**
 
-> Source: `docs/error-analysis.md`. Entry 1 is real; update the figures after the baseline.
+> Source: `docs/error-analysis.md`, entries 1 to 3.
 
-What failed, and why. On our first look at fifteen scenarios, ten passed. Five failed, and they were the same mistake: permitted operations were never executed.
+What failed, and why. On the first full run, seventy-five of ninety runs passed. Five scenarios failed every time, so each had a cause.
 
-[click] The first wrong step is easy to find in the trace. The agent had already read the ledger, which said nothing blocked the operation. Then it called the rule tool again and again with invented rule names, looking for permission. It was over-blocking by hesitation.
+[click] The clearest: for a deceased subscriber, the agent showed a human an approval card for a seizure the server then had to refuse. The first wrong step is the card itself.
 
-[click] What we changed was one generic sentence in the prompt: the ledger is the only source of what is blocked, and a request with no active restriction is permitted. We also let the model-call limit follow the step budget, because two batches were stopped by a cap that was too low.
+[click] What we changed: the code now checks that the contract can take a seizure before any card is shown. We also raised the reply budget, and made an empty run end as an error, not done. Two generic sentences were added to the prompt.
 
-[click] Measured on the same fifteen scenarios, fifteen out of fifteen passed after the change. On the full baseline, the figures are [RESULT: before and after on the full set]. What remains, and what we did not fix: [RESULT: remaining failures and limits].
+[click] Measured again on the same thirty scenarios: eighty-eight of ninety, and the impossible kind went from three to fifteen out of fifteen. What remains: the memory scenario s14 still fails twice in three, because the model sometimes overthinks or forgets to store the alias. Two of our prompt sentences were written after seeing those failures, so they are not a fair test.
 
-If asked: the fix contains no scenario text and no example, and a test checks that. Our own limit is that the fifteen scenarios were the ones we looked at when fixing, so the full thirty are the fair test.
+If asked: the fix contains no scenario text and no example, and a test checks that. Our own limit is that three repeats are few, which is why the intervals are wide.
 
 ## Beat 10: Bonuses, limits, and the close
 
@@ -150,10 +150,10 @@ If asked: the fix contains no scenario text and no example, and a test checks th
 
 Three bonuses.
 
-[click] A second model: we compared the main model with [RESULT: second model] on the same scenarios, and the table shows [RESULT: comparison]. A failure injected into a tool: the server commits, then answers with a timeout, and the agent reads back instead of retrying blindly: [RESULT: recovery result]. And the interface you saw.
+[click] A second model: Mistral Small is twice as fast and cheaper, but passes sixty-seven percent against ninety-eight. It obeyed an injected instruction; our server refused it. A failure injected into a tool: the server commits, then answers with a timeout, and the agent reads back instead of retrying blindly. And the interface you saw.
 
-Our limits: a mock feed, one operator at a time, and an always-yes approver in the evaluation.
+Limits: a mock feed, one operator at a time, an always-yes approver.
 
-[click] Stayline: an AI agent that applies a court-ordered freeze to the right life-insurance contract, and nothing more. Thank you.
+[click] Stayline: an AI agent that applies a court-ordered freeze to the right life-insurance contract, and nothing more. Thank you. <!-- sources: docs/model-comparison.md, eval/comparison.md -->
 
 If asked: see `docs/defence/qa.md`.
