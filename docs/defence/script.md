@@ -150,10 +150,10 @@ If asked: the fix contains no scenario text and no example, and a test checks th
 
 Three bonuses.
 
-[click] A second model: we compared the main model with [RESULT: second model] on the same scenarios, and the table shows [RESULT: comparison]. A failure injected into a tool: the server commits, then answers with a timeout, and the agent reads back instead of retrying blindly: [RESULT: recovery result]. And the interface you saw.
+[click] A second model: Mistral Small is twice as fast and cheaper, but passes sixty-seven percent against ninety-eight. It obeyed an injected instruction; our server refused it. A failure injected into a tool: the server commits, then answers with a timeout, and the agent reads back instead of retrying blindly. And the interface you saw.
 
-Our limits: a mock feed, one operator at a time, and an always-yes approver in the evaluation.
+Limits: a mock feed, one operator at a time, an always-yes approver.
 
-[click] Stayline: an AI agent that applies a court-ordered freeze to the right life-insurance contract, and nothing more. Thank you.
+[click] Stayline: an AI agent that applies a court-ordered freeze to the right life-insurance contract, and nothing more. Thank you. <!-- sources: docs/model-comparison.md, eval/comparison.md -->
 
 If asked: see `docs/defence/qa.md`.

@@ -421,7 +421,7 @@ uvx --from langgraph-cli langgraph dev   # LangGraph Studio fallback (CLI not a 
 
 ## Results
 
-Main model: `deepseek/deepseek-v4.1-flash` through OpenRouter, always-yes approver, 30 scenarios, 3 repeats each (90 runs). Source: [`eval/runs/2026-11-18-baseline-2/summary.md`](eval/runs/2026-11-18-baseline-2/summary.md). The comparison model (`mistralai/mistral-small-2603`) is reported on the Models screen.
+Main model: `deepseek/deepseek-v4.1-flash` through OpenRouter, always-yes approver, 30 scenarios, 3 repeats each (90 runs). Source: [`eval/runs/2026-11-18-baseline-2/summary.md`](eval/runs/2026-11-18-baseline-2/summary.md). The comparison with `mistralai/mistral-small-2603` is in [`docs/model-comparison.md`](docs/model-comparison.md): it is about twice as cheap and fast (cost per success $0.0008, p50 5.0 s) but passes 60 of 90 runs, and the server refused every forbidden call it attempted.
 
 | Kind | Scenarios | Passed | Pass rate | Wilson 95% | pass^3 |
 |------|-----------|--------|-----------|------------|--------|
