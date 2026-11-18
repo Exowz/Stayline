@@ -30,14 +30,14 @@ const rows = computed(() => trace.spans.map((span, index) => ({ ...span, last: s
 .scenario { position: absolute; top: 270px; left: 176px; right: 176px; display: flex; justify-content: space-between; gap: 20px; padding: 12px 26px; font-size: 28px; }
 .waterfall { position: absolute; top: 345px; left: 176px; right: 176px; padding: 12px 22px; }
 .trace-head { display: flex; justify-content: space-between; font-size: 27px; margin-bottom: 5px; }
-.trace-row { display: grid; grid-template-columns: 320px 1fr 520px; gap: 16px; align-items: center; height: 29px; font-size: 27px; line-height: 1; }
+.trace-row { display: grid; grid-template-columns: 320px 1fr 520px; gap: 16px; align-items: center; height: 27px; font-size: 26px; line-height: 1; }
 .trace-row .mono { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .track { position: relative; height: 17px; border-radius: 8px; background: color-mix(in oklab, var(--second) 6%, transparent); }
 .track i { position: absolute; top: 1px; height: 15px; min-width: 5px; border-radius: 8px; background: var(--second); }
 .track i.llm { background: var(--ink-muted); }
 .failed { color: var(--fail); font-weight: 650; }
 .failed .track i.llm { background: var(--fail); }
-.grader { position: absolute; top: 810px; left: 176px; right: 176px; display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 12px 25px; font-size: 26px; }
+.grader { position: absolute; top: 802px; left: 176px; right: 176px; display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 12px 25px; font-size: 26px; }
 .grader strong { max-width: 1100px; }
-.lesson { position: absolute; top: 915px; left: 176px; right: 176px; padding: 7px 20px; font-size: 26px; line-height: 1.1; }
+.lesson { position: absolute; top: 884px; left: 176px; right: 176px; padding: 9px 22px; font-size: 28px; line-height: 1.2; }
 </style>

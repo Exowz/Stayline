@@ -26,3 +26,4 @@ slides/node_modules/
 slides/dist/
 slides/export-png/
 eval/mistral/traces/
+slides/*.pdf

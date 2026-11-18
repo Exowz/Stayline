@@ -30,12 +30,12 @@ body::before { content: ''; position: fixed; inset: -10%; z-index: 0; pointer-ev
   filter: blur(34px); }
 .slidev-layout { padding: 0 !important; height: 100% !important; background: transparent !important; }
 .slidev-page, .slidev-slide-container, #slide-content { background: transparent !important; }
-.slide-pane { position: absolute; inset: 56px 56px 120px; z-index: 0; border-radius: 40px;
+.slide-pane { position: absolute; inset: 56px 56px 120px; border-radius: 40px;
   background: color-mix(in oklab, var(--white) 30%, transparent);
   backdrop-filter: blur(30px) saturate(1.5); -webkit-backdrop-filter: blur(30px) saturate(1.5);
   box-shadow: inset 0 1px 0 color-mix(in oklab, var(--white) 80%, transparent), inset 0 0 0 1px color-mix(in oklab, var(--white) 45%, transparent),
     0 40px 90px -40px color-mix(in oklab, var(--second) 60%, transparent); }
-.world-canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; z-index: 1; pointer-events: none; }
+.world-canvas { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; }
 .slide { position: absolute; inset: 0; z-index: 2; padding: 104px 176px 205px; color: var(--second); font: 400 32px/1.3 'Onest Variable', sans-serif; }
 .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
 .slide .kin { font-size: 78px; line-height: 1.08; font-weight: 650; letter-spacing: -.045em; max-width: 1550px; }
@@ -114,5 +114,12 @@ main.slide p, main.slide .island p { line-height: 1.3; }
 html.print .reveal, html.print .kin .w, .slidev-print .reveal, .slidev-print .kin .w { opacity: 1 !important; transform: none !important; filter: none !important; }
 html.print .kin .uline path, .slidev-print .kin .uline path { stroke-dashoffset: 0 !important; }
 
-/* the slides sit above the pane (z 0) and the dot canvas (z 1) */
-#slide-content .slidev-page { z-index: 2; }
+.deck-backdrop { display: none; }
+html.print .deck-backdrop { display: block; position: absolute; inset: -190px; pointer-events: none; background: radial-gradient(ellipse 52% 60% at 2% 100%, var(--second), transparent 74%),
+    radial-gradient(ellipse 46% 58% at 100% 78%, var(--loud), transparent 74%),
+    radial-gradient(ellipse 36% 44% at 58% 96%, color-mix(in oklab, var(--loud) 70%, var(--second)), transparent 74%),
+    radial-gradient(ellipse 34% 46% at 30% 56%, color-mix(in oklab, var(--loud) 45%, transparent), transparent 74%),
+    radial-gradient(ellipse 30% 40% at 6% 34%, color-mix(in oklab, var(--second) 55%, transparent), transparent 74%),
+    radial-gradient(ellipse 44% 34% at 72% 2%, var(--white), transparent 74%),
+    linear-gradient(125deg, color-mix(in oklab, var(--second) 30%, var(--main)) 0%, color-mix(in oklab, var(--loud) 26%, var(--main)) 52%, var(--main) 100%);
+  filter: blur(34px); }
