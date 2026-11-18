@@ -46,3 +46,23 @@ Cost fell because the failing runs were the expensive ones: they burned their bu
 - Only half of the scenarios exist. The seizure applications, the impossible cases, three adversarial surfaces and the memory scenarios are not measured yet.
 - The fix was made after looking at these scenarios, so they are no longer a held-out set for this change. The other 15 scenarios, written without knowledge of this fix, will serve as the check.
 - The stand-in justice server must be replaced by the real one and the runs repeated.
+
+## Entry 2 (2026-11-18): the real justice server exposed a misleading tool description
+
+**Setup.** The test stand-in was replaced by the real `justice_reference` server. Scenario s01 (a clean seizure notice), six repeats, same model. Results: `eval/runs/2026-11-18-real-justice-before/results.jsonl` and `eval/runs/2026-11-18-real-justice-after/results.jsonl`.
+
+**What failed.** 3 of 6 runs passed. The other three stopped at the model-call limit with no restriction written, after 14 steps.
+
+**Why.** The first wrong step is a `get_rule` call made by the model. The real description said "use to learn which restrictions a seizure writes", so the model called it with a rule id it could not know. It passed `CPP-706-153`, the article cited as the basis of the authority check, got `not_found`, and kept guessing other ids and dates (even 2030-01-01). The stand-in had a one-line description that did not invite the call. The server logic was identical; only the words reaching the model differed. This is the over-hesitation seen in Entry 1, caused this time by a tool description.
+
+**What we changed.** Two sentences in the descriptions of `justice_reference`, no change to the prompt or the code: `get_rule` says rule ids are not listed by any tool, to call it only with a given id and not to find what a seizure blocks (the approval step reads the rule itself); `resolve_issuing_authority` says its `basis` is a citation, not a rule id.
+
+**Before and after** (s01, six repeats):
+
+| | Before | After |
+|---|---|---|
+| Passed | 3 / 6 | 6 / 6 |
+| Steps per run | 14 on failures, 10 to 11 on passes | 10 to 11 |
+| Cost per run | up to $0.0042 | $0.0010 to $0.0018 |
+
+**What remains.** Six repeats of one scenario is a small sample, so this shows the cause and the direction, not a rate. The full baseline (30 scenarios, three repeats) on the real server measures it properly.

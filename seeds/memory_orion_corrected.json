@@ -1,0 +1,16 @@
+{
+  "extends": "memory_orion.json",
+  "notices": [
+    {"notice_id": "N-2026-0500", "court_id": "TJ-LYON", "judge_role": "jld", "procedure_type": "enquete_preliminaire", "case_reference": "2026/00500", "target_policy_number": "AV-2018-001200", "target_last_name": "Martin", "target_first_names": "Claire", "target_birth_date": "1985-11-02", "target_birth_place_code": "69123", "free_text": "La saisie concerne le contrat indiqué dans le présent avis."}
+  ],
+  "contracts": [
+    {"contract_id": "C-0003", "version": 2}
+  ],
+  "restriction_ledger": [
+    {"contract_id": "C-0003", "restriction": "rachat", "notice_id": "N-2026-0500", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-13T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0003", "restriction": "renonciation", "notice_id": "N-2026-0500", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-13T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0003", "restriction": "nantissement", "notice_id": "N-2026-0500", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-13T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0003", "restriction": "acceptation_benefice", "notice_id": "N-2026-0500", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-13T09:00:00+00:00", "note": ""},
+    {"contract_id": "C-0003", "restriction": "avance", "notice_id": "N-2026-0500", "rule_id": "CPP-706-155", "rule_version": "2026", "applied_at": "2026-11-13T09:00:00+00:00", "note": ""}
+  ]
+}

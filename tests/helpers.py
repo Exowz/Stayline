@@ -48,4 +48,4 @@ async def tool_schemas(server: MCPServerStdio) -> dict[str, dict]:
     return {tool.name: tool.input_schema for tool in await server.list_tools()}
 
 
-TEST_MODULES = ("tests.justice_stub", "stayline.servers.insurer_contracts")
+TEST_MODULES = ("stayline.servers.justice_reference", "stayline.servers.insurer_contracts")
