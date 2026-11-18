@@ -7,7 +7,7 @@ fonts:
   provider: none
 transition: stay-fade
 mcp: false
-colorSchema: light
+colorSchema: dark
 ---
 
 <B01Freeze />

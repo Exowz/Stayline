@@ -1,22 +1,38 @@
+import { ref } from 'vue'
+import * as F from './formations'
+import type { Formation } from './engine'
+
 export const MAIN_PAGES = 10
-export type WorldName = 'field' | 'target' | 'grid' | 'compare' | 'before-after'
 export const pages = [
-  { name: 'The freeze', speaker: 'Khadidja', world: 'target' },
-  { name: 'Two dangerous buttons', speaker: 'Khadidja', world: 'field' },
-  { name: 'The backend', speaker: 'Ewan', world: 'field' },
-  { name: 'The graph', speaker: 'Ewan', world: 'field' },
-  { name: 'Live demo: success', speaker: 'Ewan', world: 'field' },
-  { name: 'Live demo: failure', speaker: 'Ewan', world: 'field' },
-  { name: 'Memory', speaker: 'Khadidja', world: 'field' },
-  { name: 'Results', speaker: 'Khadidja', world: 'grid' },
-  { name: 'Error analysis', speaker: 'Khadidja', world: 'field' },
-  { name: 'The close', speaker: 'Ewan', world: 'field' },
+  { name: 'The freeze', speaker: 'Khadidja' },
+  { name: 'Two dangerous buttons', speaker: 'Khadidja' },
+  { name: 'The backend', speaker: 'Ewan' },
+  { name: 'The graph', speaker: 'Ewan' },
+  { name: 'Live demo: success', speaker: 'Ewan' },
+  { name: 'Live demo: failure', speaker: 'Ewan' },
+  { name: 'Memory', speaker: 'Khadidja' },
+  { name: 'Results', speaker: 'Khadidja' },
+  { name: 'Error analysis', speaker: 'Khadidja' },
+  { name: 'The close', speaker: 'Ewan' },
 ] as const
-export function pageInfo(page: number) { return pages[Math.max(0, Math.min(MAIN_PAGES - 1, page - 1))] }
-export function worldFor(page: number, click: number): { name: WorldName, satellites: number, delay: number } {
-  if (page === 9 && click >= 3) return { name: 'before-after', satellites: 0, delay: 0.45 }
-  if (page === 10 && click >= 2) return { name: 'field', satellites: 0, delay: 0.45 }
-  if (page === 10 && click >= 1) return { name: 'compare', satellites: 0, delay: 0.45 }
-  const info = pageInfo(page)
-  return { name: info.world as WorldName, satellites: page === 1 ? Math.max(0, click - 1) : 5, delay: 0.45 }
+
+export const pageInfo = (page: number) => pages[Math.max(0, Math.min(MAIN_PAGES - 1, page - 1))]
+
+/** Sub-state a slide can set itself (memory story, before/after timing). */
+export const phase = ref<'none' | 'without' | 'with'>('none')
+
+export function formationFor(page: number, click: number, memoryPhase: 'none' | 'without' | 'with'): Formation {
+  switch (page) {
+    case 1: return F.hero(click)
+    case 2: return F.twoButtons(click)
+    case 3: return F.backend(click)
+    case 4: return F.graph(click)
+    case 5: return F.trace(click, 's01')
+    case 6: return F.trace(click, 's14')
+    case 7: return F.memory(memoryPhase)
+    case 8: return F.results(click)
+    case 9: return F.errors(click)
+    case 10: return click >= 2 ? F.finale() : click >= 1 ? F.compare() : F.calm()
+    default: return F.hero(0)
+  }
 }

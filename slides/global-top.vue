@@ -5,14 +5,17 @@ import { MAIN_PAGES, pageInfo } from './world/pages'
 
 const nav = useNav()
 const info = computed(() => pageInfo(nav.currentPage.value))
+const segments = Array.from({ length: MAIN_PAGES }, (_, i) => i + 1)
+const blue = (n: number) => pageInfo(n).speaker === 'Khadidja'
 </script>
 
 <template>
-  <footer class="deck-dock">
-    <strong>Stayline</strong><i class="dock-rule" />
-    <span class="dock-beat">{{ info.name }}</span>
-    <span class="speaker-chip"><i :class="info.speaker.toLowerCase()" />{{ info.speaker }}</span>
-    <span class="dock-page">{{ String(nav.currentPage.value).padStart(2, '0') }}</span>
-    <span class="dock-progress"><i v-for="page in MAIN_PAGES" :key="page" :class="{ done: page < nav.currentPage.value, now: page === nav.currentPage.value }" /></span>
+  <footer class="deck-footer">
+    <span class="footer-brand">STAYLINE<i />CPP 706-155</span>
+    <span class="speaker-pill" :class="info.speaker.toLowerCase()"><b />{{ info.speaker }}</span>
+    <span class="footer-number">{{ String(nav.currentPage.value).padStart(2, '0') }}<small> / {{ MAIN_PAGES }}</small></span>
+    <div class="progress-track" aria-hidden="true">
+      <span v-for="n in segments" :key="n" :class="{ done: n <= nav.currentPage.value, blue: blue(n) }" />
+    </div>
   </footer>
 </template>

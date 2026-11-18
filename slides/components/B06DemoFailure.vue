@@ -2,42 +2,54 @@
 import { computed } from 'vue'
 import deck from '../generated/deck.json'
 import { useBeat } from './useBeat'
-import Kin from './Kin.vue'
-import Island from './Island.vue'
-const { active, shown } = useBeat()
+import Headline from './Headline.vue'
+
+const { shown } = useBeat()
 const trace = deck.traces.s14
 const graderLine = deck.s14.reason.replace(/^state: /, '').split('; ')[0]
-const rows = computed(() => trace.spans.map((span, index) => ({ ...span, last: span.kind === 'LLM' && span.tokens_out === 4000,
-  left: `${span.t0_ms / trace.total_ms * 100}%`, width: `${Math.max(span.ms / trace.total_ms * 100, 0.8)}%`, index })))
+const rows = computed(() => trace.spans.map((span, index) => ({
+  ...span, index, bad: span.kind === 'LLM' && span.tokens_out === 4000,
+  left: (span.t0_ms / trace.total_ms) * 100, width: Math.max((span.ms / trace.total_ms) * 100, 0.7),
+})))
 </script>
 
-<template><main class="slide beat-six">
-  <div class="eyebrow">06 / Live demo: failure</div>
-  <Kin text="The first *wrong* span" :on="active" />
-  <Island class="scenario reveal" :class="{ on: shown(1) }"><strong class="mono">s14 · memory scenario</strong><span>Orion request, final run, repeat 2</span></Island>
-  <Island class="waterfall reveal" :class="{ on: shown(2) }">
-    <div class="trace-head"><strong>Trace waterfall</strong><span class="mono">{{ (trace.total_ms / 1000).toFixed(1) }} s total</span></div>
-    <div v-for="row in rows" :key="row.index" class="trace-row" :class="{ failed: row.last }">
-      <span class="mono">{{ row.name === 'complete' ? 'model call' : row.name }}</span>
-      <div class="track"><i :class="row.kind.toLowerCase()" :style="{ left: row.left, width: row.width }" /></div>
-      <span class="trace-detail mono">{{ row.last ? `${row.tokens_out.toLocaleString()} tokens, ${Math.round(row.ms / 1000)} s, empty reply` : `${Math.round(row.ms)} ms` }}</span>
+<template><main class="slide">
+  <Headline :page="6" eyebrow="Live demo · failure" before="The first " emphasis="wrong" after=" span" fail />
+
+  <div class="scn mono rv rv-r" :class="{ on: shown(1) }"><b>s14</b> · memory scenario · "a request came in on the Orion contract, process it" · final run, repeat 2</div>
+
+  <div class="wf rv" :class="{ on: shown(2) }">
+    <div class="head"><span class="tag">Trace waterfall</span><span class="mono">{{ (trace.total_ms / 1000).toFixed(1) }} s · {{ trace.model_calls }} model calls · {{ trace.tool_calls }} tool calls</span></div>
+    <div v-for="r in rows" :key="r.index" class="r" :class="{ bad: r.bad }">
+      <span class="nm mono">{{ r.name === 'complete' ? 'model call' : r.name }}</span>
+      <div class="tk"><i :class="[r.kind.toLowerCase(), { on: shown(2) }]" :style="{ left: `${r.left}%`, width: `${r.width}%`, '--d': `${0.25 + r.index * 0.11}s` }" /></div>
+      <span class="dt mono">{{ r.bad ? `${r.tokens_out.toLocaleString('en-US')} tokens · ${Math.round(r.ms / 1000)} s · empty reply` : `${r.kind === 'LLM' ? r.tokens_out + ' tokens' : Math.round(r.ms) + ' ms'}` }}</span>
     </div>
-  </Island>
-  <Island tone="fail" class="grader reveal" :class="{ on: shown(3) }"><strong>Grader: {{ graderLine }}</strong><span class="mono">stop_reason: {{ deck.s14.stop_reason }}</span></Island>
-  <Island class="lesson reveal" :class="{ on: shown(4) }">A reasoning model spent its reply budget thinking. The run ends as an error.</Island>
+  </div>
+
+  <div class="panel fail grader rv" :class="{ on: shown(3) }">
+    <span class="tag">The grader, reading the database</span>
+    <p>{{ graderLine }}</p>
+    <p class="mono sr">stop_reason: {{ deck.s14.stop_reason }} <span>· a reasoning model spent its whole reply budget thinking. Before our fix this run would have been called done.</span></p>
+  </div>
 </main></template>
+
 <style scoped>
-.scenario { position: absolute; top: 270px; left: 176px; right: 176px; display: flex; justify-content: space-between; gap: 20px; padding: 12px 26px; font-size: 28px; }
-.waterfall { position: absolute; top: 345px; left: 176px; right: 176px; padding: 12px 22px; }
-.trace-head { display: flex; justify-content: space-between; font-size: 27px; margin-bottom: 5px; }
-.trace-row { display: grid; grid-template-columns: 320px 1fr 520px; gap: 16px; align-items: center; height: 27px; font-size: 26px; line-height: 1; }
-.trace-row .mono { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.track { position: relative; height: 17px; border-radius: 8px; background: color-mix(in oklab, var(--second) 6%, transparent); }
-.track i { position: absolute; top: 1px; height: 15px; min-width: 5px; border-radius: 8px; background: var(--second); }
-.track i.llm { background: var(--ink-muted); }
-.failed { color: var(--fail); font-weight: 650; }
-.failed .track i.llm { background: var(--fail); }
-.grader { position: absolute; top: 802px; left: 176px; right: 176px; display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 12px 25px; font-size: 26px; }
-.grader strong { max-width: 1100px; }
-.lesson { position: absolute; top: 884px; left: 176px; right: 176px; padding: 9px 22px; font-size: 28px; line-height: 1.2; }
+.scn { position: absolute; left: 100px; top: 228px; font-size: 23px; color: var(--muted); }
+.scn b { color: var(--fail); font-weight: 500; }
+.wf { position: absolute; left: 100px; right: 100px; top: 284px; }
+.head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; font-size: 21px; color: var(--muted); }
+.head .tag { font-size: 18px; color: var(--muted); }
+.r { display: grid; grid-template-columns: 250px 1fr 410px; gap: 20px; align-items: center; height: 31px; font-size: 20px; }
+.nm { color: var(--muted); } .dt { color: var(--muted); text-align: right; white-space: nowrap; font-size: 19px; }
+.tk { position: relative; height: 14px; border-radius: 7px; background: rgba(238, 240, 246, .05); }
+.tk i { position: absolute; top: 0; height: 14px; min-width: 5px; border-radius: 7px; background: var(--ivory); transform: scaleX(0); transform-origin: left; transition: transform .6s cubic-bezier(.3, .6, .2, 1); transition-delay: var(--d); }
+.tk i.llm { background: var(--blue); } .tk i.on { transform: none; }
+.r.bad .nm, .r.bad .dt { color: var(--fail); font-weight: 600; }
+.r.bad .tk i { background: var(--fail); box-shadow: 0 0 22px rgba(255, 92, 98, .9); animation: throb 1.4s ease-in-out infinite; }
+@keyframes throb { 50% { box-shadow: 0 0 40px rgba(255, 92, 98, 1); filter: brightness(1.25); } }
+.grader { left: 100px; right: 100px; top: 790px; padding: 18px 28px; }
+.grader .tag { margin-bottom: 6px; font-size: 17px; }
+.grader p { font-size: 26px; font-weight: 500; line-height: 1.25; }
+.sr { font-size: 21px !important; font-weight: 400 !important; color: var(--muted); margin-top: 4px !important; } .sr span { font-family: var(--sans); }
 </style>

@@ -20,7 +20,7 @@ fonts:
   provider: none
 transition: stay-fade
 mcp: false
-colorSchema: light
+colorSchema: dark
 ---
 """
 

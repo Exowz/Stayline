@@ -1,33 +1,68 @@
 <script setup lang="ts">
 import deck from '../generated/deck.json'
 import { useBeat } from './useBeat'
-import Kin from './Kin.vue'
-import Island from './Island.vue'
-const { active, shown } = useBeat()
-const summary = deck.summary
-const pct = (value: number) => `${(value * 100).toFixed(1)}%`
-const repeats = Math.max(...deck.runs.map(run => run.repeat)) + 1
+import { useCount } from './useCount'
+import Headline from './Headline.vue'
+import { BIG, blocks, runPos } from '../world/formations'
+
+const { shown, print, active } = useBeat()
+const s = deck.summary
+const n = useCount(() => s.passed, () => active.value, () => print.value, 2.2, 0.6)
+const pct = (v: number) => (v * 100).toFixed(1)
+const bl = blocks(BIG)
+const kindRes = s.by_kind
+const fails = deck.runs.filter(r => !r.passed)
+const failX = [...new Set(fails.map(r => r.id))].map(id => ({ id, n: fails.filter(r => r.id === id).length, x: runPos(fails.find(r => r.id === id)!, BIG).x }))
+const lo = s.overall.ci_low * 100, hi = s.overall.ci_high * 100, pk = s.overall.pass_hat_k * 100
 </script>
 
-<template><main class="slide beat-eight">
-  <div class="eyebrow">08 / Results</div>
-  <Kin text="*Measured* outcomes" :on="active" />
-  <Island class="grid-caption">Each dot is one run: {{ summary.by_kind.reduce((total, kind) => total + kind.scenarios, 0) }} scenarios across, {{ repeats }} repeats down</Island>
-  <div class="result-islands">
-    <Island class="kinds reveal" :class="{ on: shown(1) }"><strong class="big">{{ summary.passed }} of {{ summary.runs }}</strong><div class="kind-grid"><span v-for="kind in summary.by_kind" :key="kind.kind"><b>{{ kind.kind }}</b><strong class="mono">{{ kind.passed }}/{{ kind.runs }}</strong></span></div></Island>
-    <Island class="interval reveal" :class="{ on: shown(2) }"><h2>pass^k: {{ pct(summary.overall.pass_hat_k) }}</h2><div class="range-track"><i class="range-span" :style="{ left: pct(summary.overall.ci_low), width: pct(summary.overall.ci_high - summary.overall.ci_low) }" /><i class="range-mark" :style="{ left: pct(summary.overall.pass_hat_k) }" /></div><p class="small">Wilson 95%: {{ pct(summary.overall.ci_low) }} to {{ pct(summary.overall.ci_high) }}</p></Island>
-    <Island class="operating reveal" :class="{ on: shown(3) }"><div><span>Cost per success</span><strong class="mono">${{ summary.cost_per_success.toFixed(4) }}</strong></div><div><span>Latency p50 / p95</span><strong class="mono">{{ summary.latency_s['50'].toFixed(1) }} / {{ summary.latency_s['95'].toFixed(1) }} s</strong></div><div><span>Under-blocking / over-blocking</span><strong class="mono">✓ {{ summary.domain.under_blocking }} / ✓ {{ summary.domain.over_blocking }}</strong></div></Island>
+<template><main class="slide">
+  <Headline :page="8" eyebrow="Results · 30 scenarios, 3 repeats each" before="Reliable where it " emphasis="matters" />
+  <div class="num"><span class="big">{{ Math.round(n) }}</span><span class="of mono">/ {{ s.runs }} runs passed</span></div>
+
+  <div v-for="(b, i) in bl" :key="b.kind" class="kind rv" :class="{ on: shown(1) }" :style="{ left: `${b.x0 - 20}px`, '--d': `${i * 0.12}s` }">
+    <span class="tag">{{ b.kind }}</span>
+    <span class="res mono">{{ kindRes[i].passed }}<small>/{{ kindRes[i].runs }}</small></span>
+  </div>
+  <div v-for="f in failX" :key="f.id" class="fl mono rv" :class="{ on: shown(1) }" :style="{ left: `${f.x - 34}px` }">{{ f.id }} ×{{ f.n }}</div>
+
+  <div class="panel pk rv" :class="{ on: shown(2) }">
+    <span class="tag">pass^3 · every repeat passes</span>
+    <div class="line"><span class="big">{{ pct(s.overall.pass_hat_k) }}<small>%</small></span></div>
+    <div class="axis"><i class="span" :style="{ left: `${lo}%`, width: `${hi - lo}%` }" /><i class="pt" :style="{ left: `${pk}%` }" /></div>
+    <div class="ticks mono"><span>0</span><span>50</span><span>100 %</span></div>
+    <p class="lbl">95% Wilson interval · {{ pct(s.overall.ci_low) }}% to {{ pct(s.overall.ci_high) }}%</p>
+  </div>
+  <div class="panel cost rv" :class="{ on: shown(3) }">
+    <span class="tag">cost and speed</span>
+    <p><span class="big sm">${{ s.cost_per_success.toFixed(4) }}</span><span class="lbl"> per success</span></p>
+    <p class="lat mono">p50 {{ s.latency_s['50'].toFixed(1) }} s · p95 {{ s.latency_s['95'].toFixed(1) }} s</p>
+  </div>
+  <div class="panel err rv" :class="{ on: shown(3) }" style="--d:.2s">
+    <span class="tag">the two errors that matter</span>
+    <p><span class="big sm">{{ s.domain.under_blocking }}</span><span class="lbl"> under-blocking: a seizure missed</span></p>
+    <p><span class="big sm">{{ s.domain.over_blocking }}</span><span class="lbl"> over-blocking: too much changed</span></p>
   </div>
 </main></template>
+
 <style scoped>
-.grid-caption { position: absolute; top: 285px; left: 176px; padding: 11px 22px; font-size: 28px; font-weight: 600; }
-.result-islands { position: absolute; top: 610px; left: 176px; right: 176px; display: grid; grid-template-columns: 1.3fr 1fr 1.1fr; gap: 20px; }
-.result-islands .island { padding: 24px 26px; min-height: 230px; }
-.kind-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; margin-top: 9px; font-size: 26px; }
-.kind-grid span, .operating > div { display: flex; justify-content: space-between; gap: 12px; }
-.kind-grid b { font-weight: 550; }
-.interval h2 { font-size: 32px; }
-.interval .small { margin-top: 21px; }
-.operating { display: grid; gap: 13px; font-size: 26px; }
-.operating strong { white-space: nowrap; }
+.num { position: absolute; right: 100px; top: 70px; text-align: right; }
+.num .big { font-size: 230px; }
+.num .of { display: block; margin-top: -8px; font-size: 25px; color: var(--muted); }
+.kind { position: absolute; top: 640px; width: 280px; display: grid; gap: 4px; }
+.kind .tag { color: var(--muted); font-size: 18px; }
+.kind .res { font-size: 46px; font-weight: 500; letter-spacing: -.03em; } .kind .res small { font-size: .5em; color: var(--muted); }
+.fl { position: absolute; top: 612px; font-size: 20px; color: var(--fail); }
+.panel { top: 770px; height: 195px; padding: 20px 28px; }
+.panel .tag { margin-bottom: 4px; font-size: 17px; }
+.pk { left: 100px; width: 620px; } .cost { left: 760px; width: 520px; } .err { left: 1320px; width: 500px; }
+.big.sm { font-size: 64px; letter-spacing: -.03em; display: inline; text-shadow: none; }
+.line .big { font-size: 78px; } .line small { font-size: .5em; }
+.axis { position: relative; height: 10px; margin: 6px 0 4px; border-radius: 6px; background: rgba(238, 240, 246, .1); }
+.axis .span { position: absolute; top: 0; height: 10px; border-radius: 6px; background: var(--blue); box-shadow: 0 0 18px var(--blue-glow); }
+.axis .pt { position: absolute; top: -7px; width: 3px; height: 24px; background: var(--ivory); }
+.ticks { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); }
+.lbl { font-size: 21px; color: var(--muted); }
+.panel p { margin: 6px 0 0; } .panel .lbl { font-family: var(--sans); }
+.lat { font-size: 24px; margin-top: 12px !important; }
 </style>

@@ -1,50 +1,58 @@
 <script setup lang="ts">
-import deck from '../generated/deck.json'
 import { useBeat } from './useBeat'
-import Kin from './Kin.vue'
-import Island from './Island.vue'
-const { active, shown } = useBeat()
+import { useCount } from './useCount'
+import Headline from './Headline.vue'
+import { LOOP, STAGES } from '../world/formations'
+
+const { shown, print } = useBeat()
+const stages = [
+  ['prepare', 'Re-reads the contract and builds the approval card from the backend.'],
+  ['approve', 'The graph pauses on an interrupt. Nothing is written before it.'],
+  ['write', 'Uses the exact version the human saw.'],
+  ['verify', 'Reads the contract back to confirm.'],
+]
+const calls = useCount(() => 10, () => shown(3), () => print.value, 1.4)
 </script>
 
-<template><main class="slide beat-four">
-  <div class="eyebrow">04 / The graph</div>
-  <Kin text="One agent, *guarded* writes" :on="active" />
-  <Island class="graph-card section"><svg class="graph" viewBox="0 0 1480 340" aria-label="Agent graph: a free loop, then a guarded write path">
-    <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor" /></marker></defs>
-    <g class="loop" :class="{ lit: shown(1) }">
-      <text class="cap" x="0" y="34">The model, free to read and search</text>
-      <path class="edge" d="M170 112H210 M380 112H420" marker-end="url(#arr)" />
-      <path class="edge" d="M505 154V270H470" marker-end="url(#arr)" /><path class="edge" d="M300 270H250V154" marker-end="url(#arr)" />
-      <rect x="0" y="70" width="170" height="84" rx="24"/><text x="85" y="122">recall</text>
-      <rect x="210" y="70" width="170" height="84" rx="24"/><text x="295" y="122">think</text>
-      <rect x="420" y="70" width="170" height="84" rx="24"/><text x="505" y="122">router</text>
-      <rect x="300" y="228" width="170" height="84" rx="24"/><text x="385" y="280">read_tool</text>
-    </g>
-    <g class="guarded" :class="{ lit: shown(2) }">
-      <text class="cap" x="720" y="34">Code takes over, in four steps</text>
-      <path class="edge" d="M590 112H720" marker-end="url(#arr)" />
-      <path class="edge" d="M890 112H930 M1100 112H1140 M1310 112H1350" marker-end="url(#arr)" />
-      <rect x="720" y="70" width="170" height="84" rx="24"/><text x="805" y="122">prepare</text>
-      <rect class="approve" x="930" y="70" width="170" height="84" rx="24"/><text class="onblue" x="1015" y="122">approve</text>
-      <rect x="1140" y="70" width="170" height="84" rx="24"/><text x="1225" y="122">write</text>
-      <rect x="1350" y="70" width="130" height="84" rx="24"/><text x="1415" y="122">verify</text>
-      <text class="note" x="1015" y="196">human decides</text>
-      <text class="note" x="805" y="196">re-reads facts</text>
-    </g>
-  </svg></Island>
-  <Island class="fact reveal" :class="{ on: shown(3) }"><strong>One agent: about {{ deck.traces.s01.tool_calls }} tool calls per seizure</strong><span>Budgets in code: step limit · model-call limit</span></Island>
+<template><main class="slide">
+  <Headline :page="4" eyebrow="The agent" before="A free loop, a " emphasis="gated" after=" write" />
+
+  <div class="loopcap rv rv-s" :class="{ on: shown(1) }" :style="{ left: `${LOOP.x - 200}px`, top: `${LOOP.y - 52}px` }">
+    <span class="tag">free loop</span>
+    <p>The model reads, searches and calls tools.</p>
+  </div>
+  <div class="ring-l mono rv" :class="{ on: shown(1) }" :style="{ left: `${LOOP.x - 40}px`, top: `${LOOP.y - LOOP.ry - 58}px` }">model</div>
+  <div class="ring-l mono rv" :class="{ on: shown(1) }" :style="{ left: `${LOOP.x - 36}px`, top: `${LOOP.y + LOOP.ry + 30}px` }">tools</div>
+
+  <div v-for="(s, i) in stages" :key="s[0]" class="stage rv" :class="{ on: shown(2), gate: i === 1 }" :style="{ left: `${STAGES[i].x - 112}px`, '--d': `${i * 0.2}s` }">
+    <span class="mono n">0{{ i + 1 }}</span>
+    <b class="mono">{{ s[0] }}</b>
+    <p>{{ s[1] }}</p>
+  </div>
+  <p class="gatecap rv" :class="{ on: shown(2) }"><span class="tag">a dangerous write: code takes over, in four steps</span></p>
+
+  <div class="one rv" :class="{ on: shown(3) }">
+    <span class="tag">Why one agent</span>
+    <div class="stats">
+      <div><span class="big">1</span><span class="lbl">agent, one linear task</span></div>
+      <div><span class="big">≈{{ Math.round(calls) }}</span><span class="lbl">tool calls for a full seizure</span></div>
+      <div><span class="big">3</span><span class="lbl">budgets in code: steps, model calls, stop reason</span></div>
+    </div>
+  </div>
 </main></template>
+
 <style scoped>
-.graph-card { padding: 26px 28px 20px; }
-.graph { display: block; width: 100%; height: 360px; overflow: visible; color: var(--second); }
-.graph rect { fill: color-mix(in oklab, var(--white) 80%, transparent); stroke: var(--line); stroke-width: 2; }
-.graph text { fill: var(--second); text-anchor: middle; font: 600 30px 'JetBrains Mono Variable'; }
-.graph text.cap { text-anchor: start; font: 650 30px 'Onest Variable'; fill: var(--ink-muted); }
-.graph text.note { font: 500 27px 'Onest Variable'; fill: var(--ink-muted); }
-.graph .edge { fill: none; stroke: currentColor; stroke-width: 3.5; opacity: .6; }
-.graph g { opacity: .22; transition: opacity .6s; }
-.graph g.lit { opacity: 1; }
-.graph .approve { fill: var(--loud); stroke: var(--loud); }
-.graph text.onblue { fill: var(--white); }
-.fact { margin-top: 22px; display: flex; justify-content: space-between; gap: 24px; font-size: 34px; }
+.loopcap { position: absolute; width: 400px; text-align: center; }
+.loopcap p { font-size: 26px; color: var(--muted); margin-top: 8px; }
+.loopcap .tag { color: var(--blue); }
+.ring-l { position: absolute; font-size: 23px; color: var(--blue); letter-spacing: .08em; }
+.stage { position: absolute; top: 760px; width: 226px; }
+.stage .n { color: var(--blue); font-size: 20px; } .stage b { display: block; font-size: 30px; font-weight: 500; margin: 2px 0 8px; }
+.stage p { font-size: 21px; line-height: 1.3; color: var(--muted); }
+.stage.gate b { color: var(--blue); }
+.gatecap { position: absolute; left: 1010px; top: 560px; }
+.one { position: absolute; left: 1030px; top: 215px; width: 800px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 16px; }
+.stats .big { display: block; font-size: 120px; }
+.stats .lbl { display: block; margin-top: 10px; font: 400 22px/1.3 var(--sans); }
 </style>
