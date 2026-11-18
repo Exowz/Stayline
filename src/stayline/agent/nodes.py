@@ -13,7 +13,7 @@ from stayline.agent.prompts import CONTROL_SPECS, SYSTEM_PROMPT
 from stayline.agent.router import give_up_reason
 from stayline.agent.state import AgentState
 from stayline.memory.aliases import recall_aliases, remember_alias
-from stayline.servers.results import ToolResult
+from stayline.servers.results import ToolError, ToolResult
 
 
 def _recall_message(store, state: AgentState) -> dict | None:
@@ -191,6 +191,17 @@ def make_nodes(harness, llm, store=None) -> dict[str, Callable]:
         error, contract = await fetch("get_contract", {"contract_id": contract_id})
         if error:
             return await failed(error)
+        if tool == "apply_seizure":
+            reason = None
+            if contract["status"] != "active":
+                reason = f'The contract is {contract["status"]}; seizure is not permitted.'
+            elif contract["subscriber"]["deceased"]:
+                reason = "The subscriber is deceased; seizure is not permitted."
+            if reason is not None:
+                return await failed(ToolResult(ok=False, error=ToolError(
+                    code="operation_not_permitted", message=reason,
+                    retryable=False, outcome_unknown=False,
+                )))
         preview = {
             "tool": tool,
             "args": {"notice_id" if tool == "apply_seizure" else "request_id":

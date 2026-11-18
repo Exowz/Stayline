@@ -18,6 +18,7 @@ class Settings(BaseModel):
     checkpoint_db_path: str = "stayline-checkpoints.sqlite"
     insurer_id: str = "STAYLINE-VIE"
     max_model_calls: int = 12
+    max_tokens: int = 4000
     tool_timeout_s: float = 10.0
     model_timeout_s: float = 90.0
     phoenix_endpoint: str | None = None
@@ -31,6 +32,7 @@ def load_settings(**overrides: Any) -> Settings:
         "OPENROUTER_API_KEY": "api_key",
         "OPENROUTER_MODEL": "model",
         "OPENROUTER_BASE_URL": "base_url",
+        "OPENROUTER_MAX_TOKENS": "max_tokens",
         "STAYLINE_DB": "db_path",
         "STAYLINE_MEMORY_DB": "memory_db_path",
         "STAYLINE_CHECKPOINT_DB": "checkpoint_db_path",
