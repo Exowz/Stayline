@@ -14,7 +14,7 @@
 | 4 | Ewan | 1:05 | The graph: a free loop with a coded guard around each dangerous write. Why one agent. | The graph diagram, the guard path lighting up | Design section 9 |
 | 5 | Ewan | 1:20 | Live demo, success: a seizure notice, the approval card, the read-back. Read from the trace. | The UI, then the trace | A recorded run as fallback |
 | 6 | Ewan | 1:10 | Live demo, failure: one scenario that fails, the first wrong span, what it shows. | The trace of a failed run | `docs/error-analysis.md` |
-| 7 | Khadidja | 0:40 | Memory: the Orion alias changes a later run; without it the agent asks. | Two runs side by side | `docs/memory-test.md` |
+| 7 | Khadidja | 0:40 | Memory: the Orion alias changes a later run; without it the agent asks. | Two runs side by side | scenarios s14, s18 and s19 in `eval/scenarios.jsonl` |
 | 8 | Khadidja | 1:10 | Results per kind with intervals, pass^k, cost per success; under-blocking and over-blocking. | One table, one chart | `eval/summary.md` |
 | 9 | Khadidja | 1:10 | Error analysis: what failed, why, what we changed, measured before and after, what remains. | Before and after figures | `docs/error-analysis.md` |
 | 10 | Ewan | 0:40 | The bonuses in one breath (two models, recovery from a failure, the UI), limits, and the closing line. | Comparison table, then the tagline | `eval/comparison.md` |

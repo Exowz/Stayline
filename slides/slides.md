@@ -153,7 +153,7 @@ Now memory. An operator tells the agent: Orion is instruction 2026 slash 00417 a
 
 The alias is only a hint. The current records still decide, and text that comes back from a tool can never write to memory.
 
-If asked: the store is per operator, so another operator does not see the alias. A correction keeps the old value in a history. Source: design section 11 and `docs/memory-test.md`.
+If asked: the store is per operator, so another operator does not see the alias. A correction keeps the old value in a history. Source: design section 11 and scenarios s14, s18 and s19 in `eval/scenarios.jsonl`.
 -->
 
 ---
