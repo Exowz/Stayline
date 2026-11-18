@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
-import { Activity, BookOpen, ChartNoAxesCombined, ChevronLeft, Play, Sparkles } from 'lucide-react'
+import { Activity, BookOpen, ChartNoAxesCombined, PanelLeftClose, PanelLeftOpen, Play, Sparkles } from 'lucide-react'
 import { openRunEvents, startRun } from '@/lib/api'
 import type { RunEvent } from '@/lib/api'
 import { initialRun, reduceRun } from '@/lib/runState'
@@ -77,8 +77,6 @@ export default function App() {
 
   return <div className={collapsed ? 'app-shell collapsed' : 'app-shell'}>
     <aside className="glass-side sidebar">
-      <button type="button" className="side-toggle" onClick={() => setCollapsed((value) => !value)}
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}><ChevronLeft size={14} strokeWidth={2.2} /></button>
       <div className="brand"><span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
         <span className="side-label"><b>Stayline</b><small>Seizure guard</small></span></div>
       <nav className="nav" aria-label="Screens" style={{ '--idx': activeIndex } as CSSProperties}>
@@ -91,6 +89,11 @@ export default function App() {
         </button>)}
       </nav>
       <div className="sidebar-note"><Activity size={16} /><span className="side-label">Guarded writes need your approval.</span></div>
+      <button type="button" className="side-toggle" onClick={() => setCollapsed((value) => !value)}
+        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} title={collapsed ? 'Expand sidebar' : undefined}>
+        {collapsed ? <PanelLeftOpen size={18} strokeWidth={1.8} /> : <PanelLeftClose size={18} strokeWidth={1.8} />}
+        <span className="side-label">Collapse</span>
+      </button>
     </aside>
     <main className="pane">
       <header className="page-header">

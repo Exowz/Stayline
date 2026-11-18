@@ -117,9 +117,9 @@ body::before { content: ''; position: fixed; inset: -10%; z-index: 0; pointer-ev
 .app-shell { --side-w: 236px; min-height: 100vh; padding: 16px; display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); gap: 16px; transition: grid-template-columns 360ms cubic-bezier(.22, 1, .36, 1); }
 .app-shell.collapsed { --side-w: 76px; }
 .sidebar { position: sticky; top: 16px; height: calc(100vh - 32px); padding: 18px 12px; display: flex; flex-direction: column; }
-.side-toggle { position: absolute; top: 28px; right: -11px; z-index: 3; width: 24px; height: 24px; border: 0; border-radius: 50%; display: grid; place-items: center; background: var(--white); color: var(--second); box-shadow: 0 4px 12px -2px color-mix(in oklab, var(--second) 50%, transparent); }
-.side-toggle svg { transition: transform 300ms ease-out; }
-.collapsed .side-toggle svg { transform: rotate(180deg); }
+.side-toggle { margin-top: 8px; width: 100%; height: 44px; border: 0; border-radius: 13px; display: flex; align-items: center; gap: 14px; padding: 0 15px; background: transparent; color: color-mix(in oklab, var(--white) 82%, transparent); font-weight: 500; transition: color 200ms ease-out, background 200ms ease-out; }
+.side-toggle:hover { color: var(--white); background: color-mix(in oklab, var(--white) 10%, transparent); }
+.side-toggle svg { flex: none; }
 .side-label { min-width: 0; overflow: hidden; white-space: nowrap; transition: opacity 200ms ease-out; }
 .collapsed .side-label { opacity: 0; pointer-events: none; }
 .brand { display: flex; align-items: center; gap: 12px; padding: 0 6px; }
