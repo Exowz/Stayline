@@ -10,6 +10,8 @@
     "preexport": "npm run data && npm run notes",
     "dev": "slidev slides.md --open",
     "build": "slidev build slides.md",
+    "public": "cd .. && .venv/bin/python slides/scripts/build_public.py",
+    "build:public": "npm run data && npm run notes && npm run public && slidev build slides.public.md --base /Stayline/ --out dist-public",
     "export": "slidev export slides.md --output stayline-defence.pdf",
     "export-png": "slidev export slides.md --format png --output export-png"
   },

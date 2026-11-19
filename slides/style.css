@@ -113,3 +113,6 @@ html.print .rv, .slidev-print .rv { opacity: 1 !important; transform: none !impo
 .draw.red { stroke: var(--fail); filter: drop-shadow(0 0 8px rgba(255, 92, 98, .5)); }
 .draw.soft { stroke: var(--muted); filter: none; }
 .slidev-layout .slide p { line-height: 1.3; }
+
+/* print shows the final state: scene labels that have been replaced must not stay on the page */
+html.print .lab.rv:not(.on), html.print .wall:not(.on) { display: none !important; }
