@@ -22,3 +22,8 @@ eval/traces/
 # UI
 ui/node_modules/
 ui/dist/
+slides/node_modules/
+slides/dist/
+slides/export-png/
+eval/mistral/traces/
+slides/*.pdf

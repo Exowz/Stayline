@@ -104,11 +104,13 @@ If asked: the grader fails a run that calls a forbidden tool even when the call 
 
 Now memory. An operator tells the agent: Orion is instruction 2026 slash 00417 at the Paris court. The agent stores that alias, per operator.
 
-[click] Later, in a brand new run, the operator says: a request came in on the Orion contract, process it. With memory, the agent finds the seized contract and handles the request. Without memory, the request is ambiguous, so the agent asks and changes nothing.
+[click] Later, in a brand new run, the operator says: a request came in on the Orion contract, process it. Without memory, the request is ambiguous, so the agent asks and changes nothing.
+
+[click] With memory, the agent finds the seized contract and handles the request.
 
 The alias is only a hint. The current records still decide, and text that comes back from a tool can never write to memory.
 
-If asked: the store is per operator, so another operator does not see the alias. A correction keeps the old value in a history. Source: design section 11 and `docs/memory-test.md`.
+If asked: the store is per operator, so another operator does not see the alias. A correction keeps the old value in a history. Source: design section 11 and scenarios s14, s18 and s19 in `eval/scenarios.jsonl`.
 
 ## Beat 8: Results
 
