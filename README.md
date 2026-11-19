@@ -283,7 +283,7 @@ stayline/
 ├── scripts/smoke.py              # one real seizure on the base seed
 └── docs/
     ├── error-analysis.md         # what failed, why, what changed, before and after
-    └── defence/                  # script, timing check, Q&A
+    └── defence/                  # timing check (the script and Q&A sheet are kept locally)
 ```
 
 ---
