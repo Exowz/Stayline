@@ -27,5 +27,6 @@ slides/dist/
 slides/export-png/
 eval/mistral/traces/
 slides/*.pdf
-slides.public.md
+slides/slides.md
+docs/defence/*.md
 slides/dist-public/

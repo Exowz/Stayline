@@ -5,11 +5,16 @@ import re
 import subprocess
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = ROOT / ".venv/bin/python"
 SLIDES = ROOT / "slides"
 SCRIPT = ROOT / "docs/defence/script.md"
+
+# the script and the speaker notes stay on the presenters' machines
+pytestmark = pytest.mark.skipif(not SCRIPT.exists(), reason="script is kept locally")
 
 
 def run_script(name: str) -> None:

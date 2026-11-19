@@ -2,7 +2,7 @@ name: Deck on GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ['slides/**', 'docs/defence/**', 'eval/**']
+    paths: ['slides/**', 'eval/**']
   workflow_dispatch:
 permissions:
   contents: read
