@@ -7,7 +7,7 @@ All figures are from the final run (`eval/results.jsonl`, 30 scenarios, 3 repeat
 ## The law
 
 **1. What is the difference between a seizure and a confiscation?** (Khadidja)
-A seizure (CPP 706-155) is a conservatory measure: it freezes the contract until the trial, and the money stays inside. A confiscation is a later penalty decided by the court, with a different procedure. It is out of scope, and it is listed as future work. Source: `docs/concept.md` sections 2 and 10.
+A seizure (CPP 706-155) is a conservatory measure: it freezes the contract until the trial, and the money stays inside. A confiscation is a later penalty decided by the court, with a different procedure. It is out of scope, and it is listed as future work.
 
 **2. Why do you say "blocking too much" is wrong?** (Khadidja)
 Because of Crim. 30 Oct 2012, n° 12-84.961: the seizure can only cause the effects the law lists, and nothing more. So over-blocking is not caution, it is a legal error against an innocent client. Our grader checks both directions on the final state.
@@ -24,7 +24,7 @@ We do not. The notices come from a trusted mock feed, and the agent makes no cla
 ## The design
 
 **6. Why one agent and not several?** (Ewan)
-The job is one linear task with one set of tools. More agents add hand-offs and cost, and the brief asks for them only if a measured gain shows up. We found none, so we did not build them. Source: design section on the graph.
+The job is one linear task with one set of tools. More agents add hand-offs and cost, and the brief asks for them only if a measured gain shows up. We found none, so we did not build them.
 
 **7. Why does the server check the rules again, if the agent already did?** (Ewan)
 Because the model can be wrong or be pushed. The server re-checks everything inside the write, in one transaction. In the model comparison, Mistral followed an injected instruction in all three runs of s28 and called `execute_operation`. The server refused each time, and the final state stayed clean. That is the proof the second check is worth having.

@@ -1,6 +1,6 @@
 # Stayline: defence script (first draft)
 
-10-minute pitch, two speakers, five minutes each. The beat sheet is `outline.md`. This file is the play: who speaks, for how long, the exact words. The Slidev deck is built from it.
+10-minute pitch, two speakers, five minutes each. This file is the play: who speaks, for how long, the exact words. The Slidev deck is built from it.
 
 **Conventions.** `**SPEAKER · about N seconds**` opens a block. `[click]` advances the slide. Lines starting with `>` are stage directions and are not spoken. `If asked:` lines hold facts for the Q&A and are not spoken. `[RESULT: ...]` is a number that will come from the evaluation; it counts as two spoken words in the timing check. Run `python docs/defence/check_timing.py` after every edit.
 
@@ -20,7 +20,7 @@ We are Khadidja and Ewan, and this is Stayline.
 
 The insurer receives a notice from the court and has to apply it. Stayline is an agent that does it: it finds the right contract, even through a typo or a namesake, checks that the judge may order the seizure, shows a human exactly what it will block, and then writes five lines in a ledger, each one traced to its notice and its rule version. The law is article 706-155 of the code of criminal procedure, in its 2026 version.
 
-If asked: the five restrictions are rachat, renonciation, nantissement, acceptation_benefice, avance. Source: `docs/concept.md` section 2. Confiscation is a later, separate stage and is out of scope. The article is repealed on 1 January 2029 by ordonnance 2025-1091; our rule is pinned to its 2026 version, which is why the rules table is versioned.
+If asked: the five restrictions are rachat, renonciation, nantissement, acceptation_benefice, avance. Confiscation is a later, separate stage and is out of scope. The article is repealed on 1 January 2029 by ordonnance 2025-1091; our rule is pinned to its 2026 version, which is why the rules table is versioned.
 
 ## Beat 2: Two dangerous buttons
 
@@ -46,7 +46,7 @@ I take the engineering side. The backend is a SQLite database that we reset to a
 
 [click] The important point is that the server checks every rule again inside the write, in one transaction, whatever the model asked. A stale version, a duplicate notice, a second seizure: the server refuses and nothing changes.
 
-If asked: tools return a typed result with an error code and a retryable flag. The write tools take an idempotency key that the harness computes and hides from the model. Source: design sections 7 and 8.
+If asked: tools return a typed result with an error code and a retryable flag. The write tools take an idempotency key that the harness computes and hides from the model.
 
 ## Beat 4: The graph, and why one agent
 
@@ -110,7 +110,7 @@ Now memory. An operator tells the agent: Orion is instruction 2026 slash 00417 a
 
 The alias is only a hint. The current records still decide, and text that comes back from a tool can never write to memory.
 
-If asked: the store is per operator, so another operator does not see the alias. A correction keeps the old value in a history. Source: design section 11 and scenarios s14, s18 and s19 in `eval/scenarios.jsonl`.
+If asked: the store is per operator, so another operator does not see the alias. A correction keeps the old value in a history. Source: scenarios s14, s18 and s19 in `eval/scenarios.jsonl`.
 
 ## Beat 8: Results
 
