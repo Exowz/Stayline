@@ -1,6 +1,6 @@
 # Stayline: approved concept
 
-**Status:** approved by both team members on 2026-11-16, after a three-round debate between Claude and Codex. This is the input for the design document. The concept is settled: do not reopen the domain or the core mechanics. The design must settle the open decisions listed at the end.
+**Status:** approved by both team members on 2026-11-16, after a three-round debate. This is the input for the design document. The concept is settled: do not reopen the domain or the core mechanics. The design must settle the open decisions listed at the end.
 
 **Tagline (README):** Stayline: an AI agent that applies a court-ordered freeze to the right life-insurance contract, and nothing more.
 
@@ -249,7 +249,7 @@ The final state is read from the backend, never from the agent's words.
 1. **Models:** the course uses OpenRouter (`OPENROUTER_API_KEY` in `.env`). Choose a main model and a second model for the comparison.
 2. **Backend storage:** JSON seeds loaded into SQLite, or in-memory state; how reset works; how `expect_state` reads the state.
 3. **MCP transport:** stdio, as in lab 02, or streamable HTTP, as in lab 01.
-4. **Whether `set_request_status` needs approval.** Codex said yes. The alternative: no approval, because it moves no money and the server forbids any status that executes.
+4. **Whether `set_request_status` needs approval.** The first draft said yes. The alternative: no approval, because it moves no money and the server forbids any status that executes.
 5. **Step counter unit for `max_steps`:** tool calls (lab 06) or model calls (lab 03). Record both and document the choice.
 6. **Durable memory store:** run 2 may be a separate process, so `InMemoryStore` may not be enough (a SQLite-backed store?).
 7. **Traces:** Phoenix (lab 07), LangSmith or custom JSON spans; where cost comes from (OpenRouter `usage.cost`); redaction of personal data before export.

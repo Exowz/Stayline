@@ -41,7 +41,7 @@ Two kinds of work arrive: seizure notices from a court, and operation requests f
 
 ## Evidence on Hand
 
-- Mock seeds under `seeds/` (contracts, notices, requests), the approved concept in `docs/concept.md` and the design in `docs/superpowers/specs/`.
+- Mock seeds under `seeds/` (contracts, notices, requests), the approved concept in `docs/concept.md` and the design in `docs/design.md`.
 - No logo, no photography, no real customers. Do not invent any.
 
 ## Product Principles

@@ -80,7 +80,7 @@ Decided with Ewan during the design session:
 | 12 | Eval approver | Always answers yes and records the preview it was shown. |
 | 13 | GitHub | Private repo now, Khadidja as collaborator, public after the defence. |
 
-Calls made by Claude while writing this document (check these while reading):
+Calls made while writing this document (check these while reading):
 
 - **C1.** The exact model the API reports is stored in every result line, because the DeepSeek name is a floating alias.
 - **C2.** Two read tools are added to the concept's list, because the memory scenario cannot work without them: `find_notices(case_reference, court_id)` on `justice_reference` (from the Orion alias to its notice) and `find_operation_requests(contract_id, status)` on `insurer_contracts` (from "a request on the Orion contract" to the request).

@@ -1,16 +1,12 @@
 # Stayline Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
->
-> **Project execution method (already chosen in `CLAUDE.md`):** for each task Claude writes `.techlead/stepN_spec.md` from the task below and dispatches the `codex:codex-rescue` agent; Claude then reviews, re-runs the checks and commits. Inside the Codex sandbox use `.venv/bin/python -m pytest`, not `uv run`, and never ask Codex to delete files.
-
 **Goal:** Build Stayline, one LangGraph agent that applies a CPP 706-155 seizure to the right life-insurance contract and gates adviser requests against it, with an evaluation harness that proves it from the backend state.
 
 **Architecture:** A SQLite backend rebuilt from JSON seeds, exposed through two stdio MCP servers that enforce every business rule themselves. A free think/act loop whose two dangerous writes pass through coded prepare, approve (`interrupt`), write and verify nodes. An eval runner that resets the backend per scenario, answers approvals with yes, and grades the final snapshot.
 
 **Tech Stack:** Python >= 3.12, uv, langgraph 1.2.16, langgraph-checkpoint-sqlite 3.1.2, mcp 2.3.0, openai 3.31.0, openai-agents (MCP stdio client, as in lab 02), pydantic 2.14.1, tenacity, OpenTelemetry, FastAPI, pytest. UI: Vite, React, TypeScript, Tailwind, shadcn/ui.
 
-**Spec:** `docs/superpowers/specs/2026-11-17-stayline-design.md` (read it with `docs/concept.md`). Course patterns to copy are in `.handoff/course/slides-and-labs/sessions/` (lab 02 `my_mcp_server.py` and `lab.py`, lab 03 `lab.py` and `studio.py`, lab 04 `studio.py`, lab 06 `lab.py`, lab 07 `lab.py`).
+**Spec:** `docs/design.md` (read it with `docs/concept.md`). Course patterns to copy are in `.handoff/course/slides-and-labs/sessions/` (lab 02 `my_mcp_server.py` and `lab.py`, lab 03 `lab.py` and `studio.py`, lab 04 `studio.py`, lab 06 `lab.py`, lab 07 `lab.py`).
 
 ## Global Constraints
 
@@ -635,7 +631,6 @@ Each adversarial scenario has an otherwise valid task and a `forbid_calls` entry
 
 **Files:**
 - Create: `README.md`
-- Modify: `CLAUDE.md` (status)
 
 - [ ] **Step 1:** Final full run with the main model, `--repeats 3`, into `eval/`; regenerate `eval/summary.md` and `eval/comparison.md`.
 - [ ] **Step 2:** Write `README.md`: tagline, the story in five lines, the legal basis with the stated assumptions, the architecture diagram of spec section 9.1, setup (`uv sync`, `.env`), the graded command, the results per kind with intervals, the domain metrics, the memory test, the three bonuses, the error analysis summary, future work (mainlevée, Grafana), and who built what.
