@@ -261,7 +261,6 @@ The design contract is in [`DESIGN.md`](DESIGN.md). **LangGraph Studio** is avai
 ```
 stayline/
 ├── README.md
-├── CLAUDE.md                     # working rules for coding agents
 ├── DESIGN.md · PRODUCT.md        # UI design contract and product context
 ├── pyproject.toml · uv.lock      # stack pinned to the course lab repo
 ├── langgraph.json                # LangGraph Studio entry point
@@ -285,8 +284,8 @@ stayline/
 ├── scripts/smoke.py              # one real seizure on the base seed
 └── docs/
     ├── concept.md                # approved concept and legal grounding
-    ├── superpowers/specs/        # the design
-    ├── superpowers/plans/        # the task plan
+    ├── design.md                 # the design
+    ├── plan.md                   # the task plan
     ├── error-analysis.md         # what failed, why, what changed, before and after
     └── defence/                  # script, timing check, Q&A
 ```
