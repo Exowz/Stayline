@@ -195,7 +195,7 @@ A React app served by the same FastAPI service. Floating glass islands on a soft
 | **Evaluation** | results per kind from `eval/results.jsonl` |
 | **Models** | the two-model comparison |
 
-The design contract is in [`DESIGN.md`](DESIGN.md). **LangGraph Studio** is available as a fallback through `langgraph.json`.
+**LangGraph Studio** is available as a fallback through `langgraph.json`.
 
 ---
 
@@ -261,7 +261,6 @@ The design contract is in [`DESIGN.md`](DESIGN.md). **LangGraph Studio** is avai
 ```
 stayline/
 ├── README.md
-├── DESIGN.md · PRODUCT.md        # UI design contract and product context
 ├── pyproject.toml · uv.lock      # stack pinned to the course lab repo
 ├── langgraph.json                # LangGraph Studio entry point
 ├── .env.example
@@ -283,9 +282,6 @@ stayline/
 ├── tests/                        # run without a model: scripted LLM, fault injection
 ├── scripts/smoke.py              # one real seizure on the base seed
 └── docs/
-    ├── concept.md                # approved concept and legal grounding
-    ├── design.md                 # the design
-    ├── plan.md                   # the task plan
     ├── error-analysis.md         # what failed, why, what changed, before and after
     └── defence/                  # script, timing check, Q&A
 ```
