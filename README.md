@@ -410,7 +410,7 @@ One scenario sent this way arrives in Phoenix as one trace of 18 spans (model ca
 
 ### 7. First run in the UI
 
-1. Pick `base.json` and press **Reset**.
+1. Pick `notice_clean.json` (a clean seizure notice, scenario s01) and press **Reset**.
 2. Type `Apply seizure notice N-2026-0417.` and press **Start run**.
 3. Watch the plan fill in, then read the **approval card**: the contract, why it matched, the five restrictions.
 4. Press **Approve**, then open **Ledger** to see five rows traced to the notice and rule version.
