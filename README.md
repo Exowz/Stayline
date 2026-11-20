@@ -401,9 +401,12 @@ Open http://localhost:8000. For UI development, run `bun run dev` inside `ui/`: 
 
 ```bash
 uv sync --group demo
-uv run phoenix serve                     # then set PHOENIX_ENDPOINT=http://localhost:6006
+uv run --group demo phoenix serve        # UI on http://localhost:6006
+PHOENIX_ENDPOINT=http://localhost:6006 uv run python eval/run_eval.py --scenarios eval/scenarios.jsonl --out eval/ --ids s01 --repeats 1
 uvx --from langgraph-cli langgraph dev   # LangGraph Studio fallback (CLI not a project dependency)
 ```
+
+One scenario sent this way arrives in Phoenix as one trace of 18 spans (model calls, tools and the approval step) with the same redaction as the local files. The `demo` group pins `graphql-core<3.3`, because Phoenix does not start with the newer release.
 
 ### 7. First run in the UI
 
