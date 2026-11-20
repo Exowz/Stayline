@@ -21,7 +21,7 @@ dependencies = [
 
 [dependency-groups]
 dev = ["pytest", "pytest-asyncio", "httpx"]
-demo = ["arize-phoenix"]
+demo = ["arize-phoenix", "graphql-core<3.3"]
 
 [build-system]
 requires = ["hatchling"]
